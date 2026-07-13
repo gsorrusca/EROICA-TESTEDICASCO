@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eroica in Moto - Roadbook & Companion</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d97736">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Eroica Moto">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tuscany: {
+                            50: '#fdf8f5',
+                            100: '#fbeee6',
+                            500: '#d97736',
+                            600: '#c25e28',
+                            700: '#9f471e',
+                            800: '#7f371a',
+                            900: '#4c1e0e',
+                        },
+                        dust: '#2e2a27',
+                        background: '#1a1614'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Chart.js for Elevation Profile -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #1a1614;
+            color: #f7f4f2;
+        }
+        h1, h2, h3, h4, .font-title {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1614;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d97736;
+            border-radius: 4px;
+        }
+        .leaflet-popup-content-wrapper {
+            background: #2e2a27 !important;
+            color: #f7f4f2 !important;
+            border-radius: 12px;
+            border: 1px solid #d97736;
+        }
+        .leaflet-popup-tip {
+            background: #d97736 !important;
+        }
+        .leaflet-tooltip {
+            background: #2e2a27 !important;
+            color: #f7f4f2 !important;
+            border: 1px solid #d97736 !important;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 11px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.6);
+            white-space: normal !important;
+            width: 280px;
+        }
+        .leaflet-tooltip-top:before {
+            border-top-color: #d97736 !important;
+        }
+        .leaflet-tooltip-bottom:before {
+            border-bottom-color: #d97736 !important;
+        }
+        .leaflet-tooltip-left:before {
+            border-left-color: #d97736 !important;
+        }
+        .leaflet-tooltip-right:before {
+            border-right-color: #d97736 !important;
+        }
+        .custom-div-icon {
+            background: none !important;
+            border: none !important;
+        }
+        /* Glassmorphism utility */
+        .glass-card {
+            background: rgba(46, 42, 39, 0.45);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-card-hover:hover {
+            border: 1px solid rgba(217, 119, 54, 0.3);
+            box-shadow: 0 10px 30px -10px rgba(217, 119, 54, 0.15);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-tuscany-500 selection:text-white pb-6">
+
+    <!-- Header Section -->
+    <header class="relative py-12 px-4 md:px-8 border-b border-tuscany-800/30 overflow-hidden">
+        <!-- Background decorative elements -->
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-tuscany-600/10 rounded-full blur-[100px] -z-10"></div>
+        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-amber-600/5 rounded-full blur-[80px] -z-10"></div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="inline-block bg-tuscany-600/20 text-tuscany-500 border border-tuscany-500/30 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                        <i class="fa-solid fa-motorcycle mr-1 animate-pulse"></i> Weekend di Polvere e Passione v2
+                    </span>
+                    <span id="connection-badge" class="inline-flex items-center gap-1.5 bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                        <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> Online
+                    </span>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-black tracking-tight text-white mb-2">
+                    L'Eroica in Moto
+                </h1>
+                <p class="text-gray-400 text-sm max-w-xl">
+                    Da <span class="text-white font-semibold">Santa Croce sull'Arno</span> attraverso il Chianti e la Val d'Orcia. Un'avventura leggendaria di <span class="text-tuscany-500 font-semibold">3 Fratelli</span>.
+                </p>
+            </div>
+            
+            <!-- Overall Info Box -->
+            <div class="flex flex-wrap gap-4 w-full md:w-auto">
+                <div class="flex-1 min-w-[100px] text-center p-3 rounded-2xl glass-card">
+                    <span id="total-dist-badge" class="block text-2xl font-bold text-tuscany-500 font-title">~264</span>
+                    <span class="text-[10px] text-gray-400 uppercase tracking-wider">Km Totali</span>
+                </div>
+                <div class="flex-1 min-w-[100px] text-center p-3 rounded-2xl glass-card">
+                    <span id="offroad-ratio-badge" class="block text-2xl font-bold text-tuscany-500 font-title">50%</span>
+                    <span class="text-[10px] text-gray-400 uppercase tracking-wider">Sterrato</span>
+                </div>
+                <div class="flex-1 min-w-[100px] text-center p-3 rounded-2xl glass-card">
+                    <span id="riders-count-badge" class="block text-2xl font-bold text-tuscany-500 font-title">3</span>
+                    <span class="text-[10px] text-gray-400 uppercase tracking-wider">Piloti</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid Content -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left Side: Map, Chart & Timeline (8 Columns) -->
+        <div class="lg:col-span-8 space-y-8">
+            
+            <!-- Map & Elevation Control Panel -->
+            <div class="glass-card rounded-3xl overflow-hidden shadow-2xl relative">
+                
+                <!-- Upper Bar with Controls -->
+                <div class="p-4 flex flex-wrap justify-between items-center gap-4 bg-white/5 border-b border-white/5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
+                            <i class="fa-solid fa-map-location-dot text-tuscany-500"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold text-white leading-none">Mappa e Profilo GPX</h2>
+                            <p class="text-[10px] text-gray-400 mt-1">Carica file GPX o seleziona una giornata di default</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <!-- Default Route Selector -->
+                        <div class="inline-flex p-0.5 bg-[#120f0e] rounded-xl border border-white/5 mr-2">
+                            <button onclick="selectDayRoute('all')" id="route-tab-all" class="px-3 py-1 rounded-lg text-[11px] font-bold transition text-gray-400 hover:text-white">All</button>
+                            <button onclick="selectDayRoute('sab')" id="route-tab-sab" class="px-3 py-1 rounded-lg text-[11px] font-bold transition bg-tuscany-500 text-white">Sabato</button>
+                            <button onclick="selectDayRoute('dom')" id="route-tab-dom" class="px-3 py-1 rounded-lg text-[11px] font-bold transition text-gray-400 hover:text-white">Domenica</button>
+                        </div>
+
+                        <!-- Map Layer Selector -->
+                        <div class="flex items-center gap-1 bg-[#120f0e] p-0.5 rounded-xl border border-white/5">
+                            <button onclick="changeMapLayer('voyager')" id="btn-layer-voyager" class="px-2.5 py-1 text-[10px] font-bold text-white bg-tuscany-600 rounded-lg transition-all">Mappa</button>
+                            <button onclick="changeMapLayer('satellite')" id="btn-layer-satellite" class="px-2.5 py-1 text-[10px] font-bold text-gray-400 hover:text-white transition-all">Sat</button>
+                            <button onclick="changeMapLayer('topo')" id="btn-layer-topo" class="px-2.5 py-1 text-[10px] font-bold text-gray-400 hover:text-white transition-all">Topo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaflet Map Canvas -->
+                <div id="map" class="h-[800px] w-full relative z-10"></div>
+                
+                <!-- GPX Uploader Dropzone / Input -->
+                <div class="px-6 py-3 bg-[#231f1d] border-t border-b border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <span class="text-xs text-gray-400 flex items-center gap-2">
+                        <i class="fa-solid fa-file-import text-tuscany-500 animate-bounce"></i>
+                        <span>Vuoi caricare un percorso personalizzato? trascina un file GPX qui o</span>
+                    </span>
+                    <label class="cursor-pointer bg-white/5 hover:bg-white/10 border border-white/10 hover:border-tuscany-500 text-white text-xs px-4 py-1.5 rounded-xl font-semibold transition-all">
+                        Sfoglia file GPX
+                        <input type="file" id="gpx-input" accept=".gpx" class="hidden" onchange="loadCustomGPX(event)">
+                    </label>
+                </div>
+
+                <!-- Elevation Profile Section -->
+                <div class="p-6 bg-white/5">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-chart-area text-tuscany-500"></i> Profilo Altimetrico
+                        </h3>
+                        <span id="chart-stats" class="text-[10px] text-gray-400">
+                            Carica un percorso per visualizzare dettagli
+                        </span>
+                    </div>
+                    <div class="relative h-[150px] w-full">
+                        <canvas id="elevation-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Route Timeline / Itinerary -->
+            <div class="glass-card rounded-3xl p-6 shadow-2xl">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
+                            <i class="fa-solid fa-clock-rotate-left text-tuscany-500"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold">Cronoprogramma & Punti Chiave</h2>
+                            <p class="text-xs text-gray-400">Tappe, soste cibo e pernotto dei 3 fratelli</p>
+                        </div>
+                    </div>
+                    
+                    <div class="inline-flex p-0.5 bg-[#120f0e] rounded-xl border border-white/5">
+                        <button onclick="filterTimeline('all')" id="timeline-tab-all" class="px-3.5 py-1 rounded-lg text-xs font-semibold bg-tuscany-500 text-white transition">Tutti</button>
+                        <button onclick="filterTimeline('sab')" id="timeline-tab-sab" class="px-3.5 py-1 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition">Sabato</button>
+                        <button onclick="filterTimeline('dom')" id="timeline-tab-dom" class="px-3.5 py-1 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition">Domenica</button>
+                    </div>
+                </div>
+
+                <!-- Timeline Elements -->
+                <div class="space-y-6 relative before:absolute before:inset-y-1 before:left-4 md:before:left-6 before:w-[2px] before:bg-white/5">
+                    
+                    <!-- Timeline Day 1 Sabato Items -->
+                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.7224, 10.7744], 12)" class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                            <i class="fa-solid fa-play text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO · 08:30 (Ritrovo)</span>
+                        <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.7224, 10.7744], 12)">Partenza da Santa Croce sull'Arno</h3>
+                        <p class="text-gray-400 text-xs mt-1">Ritrovo iniziale dei tre fratelli. Pieno di carburante e riscaldamento motori prima della guida verso il Chianti.</p>
+                    </div>
+
+                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.466970, 11.433860], 13)" class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                            <i class="fa-solid fa-flag text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO · 10:00</span>
+                        <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.466970, 11.433860], 13)">Gaiole in Chianti</h3>
+                        <p class="text-gray-400 text-xs mt-1">Il cuore pulsante dell'Eroica. Sosta foto davanti alla scultura del Gallo Nero e visita al borgo prima dello sterrato.</p>
+                    </div>
+
+                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.413448, 11.463600], 14)" class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                            <i class="fa-solid fa-camera text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO · 10:45</span>
+                        <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.413448, 11.463600], 14)">Castello di Brolio</h3>
+                        <p class="text-gray-400 text-xs mt-1">Castello del XII secolo. Bellissima salita sterrata tra i cipressi con splendida vista panoramica sulla vallata.</p>
+                    </div>
+
+                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.2147, 11.3789], 14)" class="absolute left-1 md:left-3 top-1 bg-tuscany-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                            <i class="fa-solid fa-utensils text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase text-tuscany-500 bg-tuscany-500/10 px-2 py-0.5 rounded-full border border-tuscany-500/20">SABATO · 12:45 (Pranzo)</span>
+                        <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.2147, 11.3789], 14)">Pranzo a Radi</h3>
+                        <p class="text-gray-400 text-xs mt-1">Pausa ristoro all'alimentari storico con salumi locali per un panino toscano veloce, tipico e genuino.</p>
+                    </div>
+
+                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.055043, 11.489142], 13)" class="absolute left-1 md:left-3 top-1 bg-purple-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                            <i class="fa-solid fa-bed text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">SABATO · 15:30 (Notte)</span>
+                        <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.055043, 11.489142], 13)">Arrivo a Montalcino</h3>
+                        <p class="text-gray-400 text-xs mt-1">Sistemazione e doccia in hotel (Hotel dei Capitani). Aperitivo in Piazza del Popolo alle 19:30 e cena tipica toscana con Brunello alle 20:30.</p>
+                    </div>
+
+                    <!-- Timeline Day 2 Domenica Items -->
+                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.055043, 11.489142], 13)" class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                            <i class="fa-solid fa-play text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA · 09:00</span>
+                        <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.055043, 11.489142], 13)">Partenza da Montalcino</h3>
+                        <p class="text-gray-400 text-xs mt-1">Check-out dall'hotel, controllo bagagli e riscaldamento motori in direzione nord verso Gaiole.</p>
+                    </div>
+
+                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.137508, 11.481829], 14)" class="absolute left-1 md:left-3 top-1 bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                            <i class="fa-solid fa-triangle-exclamation text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase text-red-400 bg-red-500/10 px-2 py-0.5 rounded-full border border-red-500/20">DOMENICA · 09:15</span>
+                        <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.137508, 11.481829], 14)">Deviazione Buonconvento</h3>
+                        <p class="text-gray-400 text-xs mt-1">⚠️ Splendido borgo medievale. Deviazione obbligatoria per evitare sensi unici e strade chiuse. Seguire il GPX aggiornato.</p>
+                    </div>
+
+                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.2341, 11.5739], 13)" class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                            <i class="fa-solid fa-trophy text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA · 11:15</span>
+                        <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.2341, 11.5739], 13)">Monte Sante Marie</h3>
+                        <p class="text-gray-400 text-xs mt-1">Il leggendario e tecnico tratto sterrato delle Crete Senesi. Guida in piedi sulle pedane per divertimento e adrenalina.</p>
+                    </div>
+
+                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.487332, 11.376469], 13)" class="absolute left-1 md:left-3 top-1 bg-tuscany-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                            <i class="fa-solid fa-utensils text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase text-tuscany-500 bg-tuscany-500/10 px-2 py-0.5 rounded-full border border-tuscany-500/20">DOMENICA · 13:00 (Pranzo)</span>
+                        <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.487332, 11.376469], 13)">Pranzo a Radda in Chianti</h3>
+                        <p class="text-gray-400 text-xs mt-1">Sosta ristoro nel borgo medievale. Pranzo tipico toscano (La Capannina o Agriturismo Il Pozzo) e visita al centro.</p>
+                    </div>
+
+                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.494765, 11.449528], 14)" class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                            <i class="fa-solid fa-wine-glass text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA · 14:30</span>
+                        <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.494765, 11.449528], 14)">Badia a Coltibuono</h3>
+                        <p class="text-gray-400 text-xs mt-1">Visita all'antica abbazia benedettina millenaria. Degustazione vini locali e sosta culturale prima del rientro.</p>
+                    </div>
+
+                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.466970, 11.433860], 13)" class="absolute left-1 md:left-3 top-1 bg-green-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                            <i class="fa-solid fa-flag-checkered text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/20">DOMENICA · 16:30 (Arrivo)</span>
+                        <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.466970, 11.433860], 13)">Rientro a Gaiole in Chianti</h3>
+                        <p class="text-gray-400 text-xs mt-1">Arrivo finale all'anello dell'Eroica classica. Foto di gruppo e saluti finali a partire dalle ore 17:00.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Side: Weather, Splitter & Packing List (4 Columns) -->
+        <div class="lg:col-span-4 space-y-8">
+            
+            <!-- Weather Center Card -->
+            <div class="glass-card rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
+                            <i class="fa-solid fa-cloud-sun text-tuscany-500"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold text-white">Meteo Percorso</h2>
+                            <p class="text-[10px] text-gray-400">Previsioni e dati storici Open-Meteo</p>
+                        </div>
+                    </div>
+                    <button onclick="fetchWeatherData()" class="text-[10px] text-tuscany-500 hover:text-tuscany-600 transition flex items-center gap-1">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
+                </div>
+
+                <!-- Date Picker -->
+                <div class="mb-4 flex items-center justify-between gap-2 bg-[#120f0e]/50 p-2.5 rounded-xl border border-white/5">
+                    <label for="weather-date-input" class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Data Viaggio:</label>
+                    <input type="date" id="weather-date-input" onchange="handleWeatherDateChange(event)" class="bg-[#1a1614] border border-white/10 rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-tuscany-500 cursor-pointer">
+                </div>
+
+                <!-- Live Weather Locations -->
+                <div class="space-y-3" id="weather-list">
+                    <div class="animate-pulse flex space-x-4 p-3 bg-white/5 rounded-xl">
+                        <div class="flex-1 space-y-3 py-1">
+                            <div class="h-2 bg-white/10 rounded"></div>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="h-2 bg-white/10 rounded col-span-2"></div>
+                                <div class="h-2 bg-white/10 rounded col-span-1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Foto Imperdibili Card -->
+            <div class="glass-card rounded-3xl p-6 shadow-2xl relative">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
+                            <i class="fa-solid fa-camera text-tuscany-500"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold text-white">Foto Imperdibili</h2>
+                            <p class="text-[10px] text-gray-400">Scatti leggendari lungo la via</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photos Checklist -->
+                <div class="space-y-2 pr-1 max-h-[300px] overflow-y-auto" id="photo-checklist-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Packing Checklist Card -->
+            <div class="glass-card rounded-3xl p-6 shadow-2xl relative">
+                <!-- Circular progress absolute top-6 right-6 -->
+                <div class="absolute top-6 right-6 flex items-center justify-center">
+                    <svg class="w-12 h-12 transform -rotate-90">
+                        <circle cx="24" cy="24" r="18" stroke="rgba(255,255,255,0.05)" stroke-width="4.5" fill="transparent"/>
+                        <circle id="checklist-progress-circle" cx="24" cy="24" r="18" stroke="#d97736" stroke-width="4.5" fill="transparent"
+                                stroke-dasharray="113.1" stroke-dashoffset="113.1" class="transition-all duration-300"/>
+                    </svg>
+                    <span id="checklist-progress-text" class="absolute text-[10px] font-black text-white font-title">0%</span>
+                </div>
+
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
+                        <i class="fa-solid fa-clipboard-list text-tuscany-500"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-sm font-bold text-white">Preparazione Bagaglio</h2>
+                        <p class="text-[10px] text-gray-400">Kit moto, attrezzi e cose essenziali</p>
+                    </div>
+                </div>
+
+                <!-- Checklist Category Accordions -->
+                <div class="space-y-3" id="checklist-container">
+                    <!-- Categoria: Moto -->
+                    <div class="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.02]">
+                        <button onclick="toggleAccordion('check-cat-moto')" class="w-full px-4 py-3 flex justify-between items-center text-xs font-bold text-white hover:bg-white/5 transition">
+                            <span>🔧 Moto e Ricambi</span>
+                            <i id="check-cat-moto-arrow" class="fa-solid fa-chevron-down text-gray-400 transition-transform"></i>
+                        </button>
+                        <div id="check-cat-moto-body" class="px-4 pb-3 space-y-2 hidden">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    <!-- Categoria: Abbigliamento -->
+                    <div class="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.02]">
+                        <button onclick="toggleAccordion('check-cat-vest')" class="w-full px-4 py-3 flex justify-between items-center text-xs font-bold text-white hover:bg-white/5 transition">
+                            <span>🧥 Abbigliamento & Protezioni</span>
+                            <i id="check-cat-vest-arrow" class="fa-solid fa-chevron-down text-gray-400 transition-transform"></i>
+                        </button>
+                        <div id="check-cat-vest-body" class="px-4 pb-3 space-y-2 hidden">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                    <!-- Categoria: Tecnologia -->
+                    <div class="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.02]">
+                        <button onclick="toggleAccordion('check-cat-tech')" class="w-full px-4 py-3 flex justify-between items-center text-xs font-bold text-white hover:bg-white/5 transition">
+                            <span>📱 Tech, Documenti & Idratazione</span>
+                            <i id="check-cat-tech-arrow" class="fa-solid fa-chevron-down text-gray-400 transition-transform"></i>
+                        </button>
+                        <div id="check-cat-tech-body" class="px-4 pb-3 space-y-2 hidden">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add custom checklist item -->
+                <div class="mt-4 p-3 bg-white/5 border border-white/5 rounded-2xl space-y-2">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Aggiungi oggetto personalizzato</span>
+                    <div class="flex gap-1.5">
+                        <input type="text" id="new-item-desc" placeholder="Nome oggetto..." class="flex-grow bg-[#120f0e] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-tuscany-500">
+                        <select id="new-item-cat" class="bg-[#120f0e] border border-white/10 rounded-xl px-2 py-1.5 text-xs text-white focus:outline-none focus:border-tuscany-500">
+                            <option value="moto">🔧 Moto</option>
+                            <option value="vest">🧥 Vestiti</option>
+                            <option value="tech">📱 Tech</option>
+                        </select>
+                        <button onclick="addCustomChecklistItem()" class="bg-tuscany-500 hover:bg-tuscany-600 px-3 rounded-xl text-white text-xs font-bold transition">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Professional Advices Box -->
+            <div class="bg-gradient-to-br from-tuscany-900/40 to-dust rounded-3xl border border-tuscany-500/20 p-6 shadow-2xl">
+                <h2 class="text-sm font-bold mb-3 flex items-center gap-2 text-white">
+                    <i class="fa-solid fa-circle-exclamation text-tuscany-500"></i> Consigli del Pilota Locale:
+                </h2>
+                <ul class="space-y-3 text-xs text-gray-300">
+                    <li class="flex gap-2">
+                        <i class="fa-solid fa-shield-halved text-tuscany-500 mt-0.5"></i>
+                        <span><strong>Distanza e Polvere:</strong> La visibilità su strada bianca scende a zero. Mantieni una distanza di sicurezza di almeno 40 metri.</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <i class="fa-solid fa-person-biking text-tuscany-500 mt-0.5"></i>
+                        <span><strong>Ciclisti in curva:</strong> L'Eroica è amata dai ciclisti. Fai molta attenzione nelle curve cieche e mantieni velocità moderate.</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <i class="fa-solid fa-gas-pump text-tuscany-500 mt-0.5"></i>
+                        <span><strong>Rifornimento:</strong> Nelle zone delle Crete Senesi i distributori sono rari. Fai il pieno ad ogni sosta utile.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-8 bg-background border-t border-white/5 py-6 text-center text-xs text-gray-500 px-4">
+        <p>Eroica in Moto © 2026 · Redesigned in WebApp PWA.</p>
+        <p class="text-gray-600 mt-1">Sviluppato per 3 fratelli e compagni d'avventura. Rispetta la natura e guida con prudenza.</p>
+    </footer>
+
+    <!-- Weather Details Modal -->
+    <div id="weather-modal" class="fixed inset-0 z-[1000] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div class="bg-dust border border-white/10 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="p-6 border-b border-white/5 flex justify-between items-center">
+                <h3 id="modal-city-name" class="text-lg font-bold text-white">Previsioni Meteo</h3>
+                <button onclick="closeWeatherModal()" class="text-gray-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="modal-forecast-body" class="p-6 space-y-4">
+                <!-- Forecast items dynamically added -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // --- COORD & DEFAULT TRACK DATA ---
+        // Coordinates and mock elevations (m) for default tracks
+        const defaultTracks = {
+            sab: [
+                { lat: 43.7224, lon: 10.7744, ele: 18, name: "Santa Croce sull'Arno" },
+                { lat: 43.6850, lon: 10.8500, ele: 45 },
+                { lat: 43.6420, lon: 10.9120, ele: 95 },
+                { lat: 43.6105, lon: 10.9691, ele: 150 },
+                { lat: 43.5481, lon: 11.0421, ele: 210 },
+                { lat: 43.4684, lon: 11.1448, ele: 280 },
+                { lat: 43.4692, lon: 11.2861, ele: 310 },
+                { lat: 43.4862, lon: 11.3783, ele: 340 },
+                { lat: 43.4658, lon: 11.4339, ele: 360, name: "Gaiole in Chianti" },
+                { lat: 43.4136, lon: 11.4622, ele: 450, name: "Castello di Brolio" },
+                { lat: 43.3450, lon: 11.4300, ele: 310 },
+                { lat: 43.3180, lon: 11.3300, ele: 240 },
+                { lat: 43.2147, lon: 11.3789, ele: 156, name: "Radi" },
+                { lat: 43.1364, lon: 11.4822, ele: 147, name: "Buonconvento" },
+                { lat: 43.0581, lon: 11.4891, ele: 564, name: "Montalcino" }
+            ],
+            dom: [
+                { lat: 43.0581, lon: 11.4891, ele: 564, name: "Montalcino" },
+                { lat: 43.1364, lon: 11.4822, ele: 147, name: "Buonconvento" },
+                { lat: 43.2341, lon: 11.5739, ele: 290, name: "Monte Sante Marie" },
+                { lat: 43.3468, lon: 11.5039, ele: 230 },
+                { lat: 43.3186, lon: 11.3306, ele: 210 },
+                { lat: 43.4700, lon: 11.1450, ele: 290 },
+                { lat: 43.6105, lon: 10.9691, ele: 150 },
+                { lat: 43.7224, lon: 10.7744, ele: 18, name: "Santa Croce (Fine)" }
+            ]
+        };
+
+        const staticWaypoints = [
+            { name: "Santa Croce sull'Arno (Partenza)", coords: [43.7224, 10.7744], type: 'start', desc: "Ritrovo dei tre fratelli ore 08:30 con pieno, pronti alla partenza." },
+            { name: "Gaiole in Chianti", coords: [43.466970, 11.433860], type: 'waypoint', desc: "Il cuore pulsante dell'Eroica. Sosta foto davanti alla scultura del Gallo Nero." },
+            { name: "Castello di Brolio", coords: [43.413448, 11.463600], type: 'waypoint', desc: "Castello del XII secolo (famiglia Ricasoli). Salita sterrata tra cipressi e vista panoramica." },
+            { name: "Radi (Pranzo Sabato)", coords: [43.2147, 11.3789], type: 'food', desc: "Alimentari storico con salumi locali per un panino veloce e gustoso." },
+            { name: "Montalcino (Pernotto)", coords: [43.055043, 11.489142], type: 'sleep', desc: "Famoso per il Brunello. Strade bianche con pendenze >15% ed enogastronomia toscana." },
+            { name: "Buonconvento", coords: [43.137508, 11.481829], type: 'waypoint', desc: "Splendido borgo medievale. Deviazione obbligatoria per evitare sensi unici." },
+            { name: "Radda in Chianti", coords: [43.487332, 11.376469], type: 'waypoint', desc: "Borgo medievale del Chianti, ottimo per una sosta ristoro." },
+            { name: "Badia a Coltibuono", coords: [43.494765, 11.449528], type: 'food', desc: "Antica abbazia benedettina millenaria. Oggi cantina vinicola e ristorante di livello." },
+            { name: "Monte Sante Marie", coords: [43.2341, 11.5739], type: 'warning', desc: "Il tratto sterrato più famoso, duro ed entusiasmante delle Crete Senesi." }
+        ];
+
+        // --- GLOBAL APP STATES ---
+        let mapInstance;
+        let mapLayers = {};
+        let activeLayerKey = 'voyager';
+        let currentRoutePolyline = null;
+        let currentTrackData = []; // Array of {lat, lon, ele, dist} currently rendered
+        let hoverMarker = null;
+        let elevationChartInstance = null;
+        let activeRouteDay = 'sab'; // 'sab' or 'dom' or 'custom'
+        
+        let photoChecklist = [
+            { id: "photo-brolio", label: "Castello di Brolio", desc: "La strada bianca tra i cipressi", checked: false },
+            { id: "photo-montalcino", label: "Montalcino", desc: "Panorama sulla valle", checked: false },
+            { id: "photo-sanquirico", label: "San Quirico d'Orcia", desc: "I cipressi di Leonardi (sulla via Cassia)", checked: false },
+            { id: "photo-pienza", label: "Pienza", desc: "Il panorama dalla terrazza del duomo", checked: false },
+            { id: "photo-bagno", label: "Bagno Vignoni", desc: "La vasca termale in piazza", checked: false },
+            { id: "photo-radda", label: "Radda in Chianti", desc: "La piazza medievale", checked: false },
+            { id: "photo-bigbench", label: "Big Bench #136", desc: "La panchina gigante con vista", checked: false }
+        ];
+        
+        let checklist = {
+            moto: [
+                { id: 'm-1', desc: 'Kit Riparazione Tubeless (vermicelli, ago)', checked: false },
+                { id: 'm-2', desc: 'Mini Compressore portatile / CO₂', checked: false },
+                { id: 'm-3', desc: 'Manometro pneumatici di precisione', checked: false },
+                { id: 'm-4', desc: 'Nastro isolante & Fascette da elettricista', checked: false },
+                { id: 'm-5', desc: 'Attrezzi minimi (chiave candela, cacciaviti)', checked: false }
+            ],
+            vest: [
+                { id: 'v-1', desc: 'Completo a strati / protezioni da fuoristrada', checked: false },
+                { id: 'v-2', desc: 'Giacca o tuta Antiacqua', checked: false },
+                { id: 'v-3', desc: 'Guanti leggeri ed estivi + paio di ricambio', checked: false },
+                { id: 'v-4', desc: 'Scaldacollo o bandana antipolvere', checked: false }
+            ],
+            tech: [
+                { id: 't-1', desc: 'Documenti personali e carta circolazione moto', checked: false },
+                { id: 't-2', desc: 'Supporto smartphone da manubrio', checked: false },
+                { id: 't-3', desc: 'Powerbank capiente e cavi impermeabili', checked: false },
+                { id: 't-4', desc: 'Borraccia o zaino idrico Camelbak', checked: false },
+                { id: 't-5', desc: 'Salviette umide per pulizia visiera casco', checked: false }
+            ]
+        };
+
+        // --- DEFAULT GPX LOADING & SPLITTING ---
+        function loadDefaultGPX() {
+            fetch('./Eroica%20in%20moto%20percorso%20permanente.gpx')
+                .then(res => {
+                    if (!res.ok) throw new Error("File GPX non trovato");
+                    return res.text();
+                })
+                .then(gpxText => {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(gpxText, "text/xml");
+                    const trkpts = xmlDoc.getElementsByTagName("trkpt");
+                    
+                    if (trkpts.length === 0) return;
+
+                    let gpxPoints = [];
+                    for (let i = 0; i < trkpts.length; i++) {
+                        const node = trkpts[i];
+                        const lat = parseFloat(node.getAttribute("lat"));
+                        const lon = parseFloat(node.getAttribute("lon"));
+                        const eleNode = node.getElementsByTagName("ele")[0];
+                        const ele = eleNode ? parseFloat(eleNode.textContent) : 0;
+                        gpxPoints.push({ lat, lon, ele });
+                    }
+
+                    // Dynamically find the track point closest to Montalcino pernotto coordinates
+                    const montalcinoCoords = [43.0581, 11.4891];
+                    let minD = Infinity;
+                    let montalcinoIndex = 2304; // fallback index
+                    for (let i = 0; i < gpxPoints.length; i++) {
+                        const pt = gpxPoints[i];
+                        const d = calculateHaversine(montalcinoCoords[0], montalcinoCoords[1], pt.lat, pt.lon);
+                        if (d < minD) {
+                            minD = d;
+                            montalcinoIndex = i;
+                        }
+                    }
+
+                    // Connection path from Santa Croce to Gaiole
+                    const connectionToGaiole = [
+                        { lat: 43.7224, lon: 10.7744, ele: 18, name: "Santa Croce sull'Arno" },
+                        { lat: 43.6850, lon: 10.8500, ele: 45 },
+                        { lat: 43.6420, lon: 10.9120, ele: 95 },
+                        { lat: 43.6105, lon: 10.9691, ele: 150 },
+                        { lat: 43.5481, lon: 11.0421, ele: 210 },
+                        { lat: 43.4684, lon: 11.1448, ele: 280 },
+                        { lat: 43.4692, lon: 11.2861, ele: 310 },
+                        { lat: 43.4862, lon: 11.3783, ele: 340 }
+                    ];
+
+                    // Saturday: connection to Gaiole + GPX track from Gaiole (0) to Montalcino (montalcinoIndex)
+                    const sabGPX = gpxPoints.slice(0, montalcinoIndex + 1);
+                    if (sabGPX.length > 0) {
+                        sabGPX[0].name = "Gaiole in Chianti";
+                        sabGPX[sabGPX.length - 1].name = "Montalcino";
+                    }
+                    defaultTracks.sab = [...connectionToGaiole, ...sabGPX];
+
+                    // Sunday: GPX track from Montalcino to end (returns to Gaiole) + reversed connection back to Santa Croce
+                    const domGPX = gpxPoints.slice(montalcinoIndex);
+                    if (domGPX.length > 0) {
+                        domGPX[0].name = "Montalcino";
+                        domGPX[domGPX.length - 1].name = "Gaiole in Chianti";
+                    }
+                    const returnConnection = connectionToGaiole.map(p => ({...p})).reverse();
+                    returnConnection[returnConnection.length - 1].name = "Santa Croce (Fine)";
+                    defaultTracks.dom = [...domGPX, ...returnConnection];
+
+                    // Refresh active route
+                    selectDayRoute(activeRouteDay);
+                })
+                .catch(err => {
+                    console.warn("Utilizzo fallbacks hardcoded per tracce predefinite (CORS o offline):", err);
+                });
+        }
+
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initOfflineDetector();
+            initMap();
+            loadLocalStorageData();
+            renderPhotoChecklist();
+            renderChecklist();
+            selectDayRoute('sab');
+            loadDefaultGPX();
+            
+            // Set today's date in input on load
+            const todayStr = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('weather-date-input');
+            if (dateInput) {
+                dateInput.value = todayStr;
+            }
+            fetchWeatherData(todayStr);
+
+            registerServiceWorker();
+        });
+
+        // --- OFFLINE / ONLINE DETECTOR ---
+        function initOfflineDetector() {
+            const updateStatus = () => {
+                const badge = document.getElementById('connection-badge');
+                if (navigator.onLine) {
+                    badge.innerHTML = '<span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> Online';
+                    badge.className = "inline-flex items-center gap-1.5 bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full";
+                } else {
+                    badge.innerHTML = '<span class="w-1.5 h-1.5 bg-red-400 rounded-full"></span> Offline';
+                    badge.className = "inline-flex items-center gap-1.5 bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full";
+                }
+            };
+            window.addEventListener('online', updateStatus);
+            window.addEventListener('offline', updateStatus);
+            updateStatus();
+        }
+
+        // --- SERVICE WORKER REGISTRATION ---
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((reg) => console.log('Service Worker registrato con successo. Scope:', reg.scope))
+                    .catch((err) => console.warn('Errore registrazione Service Worker:', err));
+            }
+        }
+
+        // --- LOCAL STORAGE MANAGER ---
+        function loadLocalStorageData() {
+            if (localStorage.getItem('eroica_checklist')) {
+                checklist = JSON.parse(localStorage.getItem('eroica_checklist'));
+            }
+            if (localStorage.getItem('eroica_photo_checklist')) {
+                photoChecklist = JSON.parse(localStorage.getItem('eroica_photo_checklist'));
+            }
+        }
+
+        function saveState(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // --- MAP FUNCTIONS ---
+        function initMap() {
+            // Leaflet center on central Tuscany
+            mapInstance = L.map('map', { zoomControl: false }).setView([43.38, 11.30], 9);
+            
+            // Add zoom control in top right
+            L.control.zoom({ position: 'topright' }).addTo(mapInstance);
+
+            // Layer configurations
+            mapLayers = {
+                voyager: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; CARTO &copy; OpenStreetMap'
+                }),
+                satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Esri, i-cubed, USDA, USGS'
+                }),
+                topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                    attribution: 'OpenTopoMap'
+                })
+            };
+
+            // Set default layer
+            mapLayers[activeLayerKey].addTo(mapInstance);
+
+            // Render Static Waypoint Markers
+            renderWaypointMarkers();
+        }
+
+        function changeMapLayer(layerKey) {
+            mapInstance.removeLayer(mapLayers[activeLayerKey]);
+            mapLayers[layerKey].addTo(mapInstance);
+            
+            // Update UI buttons
+            ['voyager', 'satellite', 'topo'].forEach(key => {
+                const btn = document.getElementById(`btn-layer-${key}`);
+                if (key === layerKey) {
+                    btn.className = "px-2.5 py-1 text-[10px] font-bold text-white bg-tuscany-600 rounded-lg transition-all";
+                } else {
+                    btn.className = "px-2.5 py-1 text-[10px] font-bold text-gray-400 hover:text-white transition-all";
+                }
+            });
+
+            activeLayerKey = layerKey;
+        }
+
+        function renderWaypointMarkers() {
+            // Helper to generate FontAwesome marker html
+            const customIconHTML = (icon, bgClass) => {
+                return L.divIcon({
+                    html: `<div class="flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 border-white text-white ${bgClass}"><i class="${icon} text-xs"></i></div>`,
+                    className: 'custom-div-icon',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16],
+                    popupAnchor: [0, -16]
+                });
+            };
+
+            staticWaypoints.forEach(wp => {
+                let icon;
+                if (wp.type === 'start') icon = customIconHTML('fa-solid fa-motorcycle', 'bg-blue-600');
+                else if (wp.type === 'food') icon = customIconHTML('fa-solid fa-utensils', 'bg-tuscany-500');
+                else if (wp.type === 'sleep') icon = customIconHTML('fa-solid fa-bed', 'bg-purple-600');
+                else if (wp.type === 'warning') icon = customIconHTML('fa-solid fa-triangle-exclamation', 'bg-red-600');
+                else icon = customIconHTML('fa-solid fa-location-dot', 'bg-gray-600');
+
+                L.marker(wp.coords, { icon: icon })
+                    .addTo(mapInstance)
+                    .bindTooltip(`
+                        <div class="p-0.5">
+                            <h4 class="font-bold text-xs text-white">${wp.name}</h4>
+                            <p class="text-[10px] text-gray-300 mt-1.5 leading-relaxed">${wp.desc}</p>
+                        </div>
+                    `, {
+                        direction: 'top',
+                        opacity: 0.95
+                    });
+            });
+        }
+
+        function focusOnPoint(coords, zoom = 14) {
+            mapInstance.setView(coords, zoom);
+            
+            // Highlight step briefly by placing a temporary pulsing marker
+            const tempHighlight = L.circleMarker(coords, {
+                color: '#d97736',
+                fillColor: '#d97736',
+                fillOpacity: 0.6,
+                radius: 12
+            }).addTo(mapInstance);
+
+            setTimeout(() => {
+                mapInstance.removeLayer(tempHighlight);
+            }, 1800);
+        }
+
+        // --- GPX & ROUTE CALCULATIONS ---
+        // Haversine distance in km
+        function calculateHaversine(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function processCoordinatesToTrackData(coordsList) {
+            let processed = [];
+            let cumulativeDistance = 0;
+
+            for (let i = 0; i < coordsList.length; i++) {
+                const pt = coordsList[i];
+                if (i > 0) {
+                    const prev = coordsList[i - 1];
+                    cumulativeDistance += calculateHaversine(prev.lat, prev.lon, pt.lat, pt.lon);
+                }
+                processed.push({
+                    lat: pt.lat,
+                    lon: pt.lon,
+                    ele: pt.ele || 0,
+                    dist: parseFloat(cumulativeDistance.toFixed(2)),
+                    name: pt.name || ''
+                });
+            }
+            return processed;
+        }
+
+        function renderTracksOnMap(tracks) {
+            if (currentRoutePolyline) {
+                mapInstance.removeLayer(currentRoutePolyline);
+            }
+
+            const group = L.featureGroup();
+            tracks.forEach(track => {
+                const latLns = track.points.map(p => [p.lat, p.lon]);
+                L.polyline(latLns, {
+                    color: track.color,
+                    weight: 5,
+                    opacity: 0.85
+                }).addTo(group);
+            });
+
+            group.addTo(mapInstance);
+            currentRoutePolyline = group;
+
+            mapInstance.fitBounds(group.getBounds(), { padding: [30, 30] });
+        }
+
+        function renderTrackOnMap(trackPoints, color = '#d97736') {
+            renderTracksOnMap([{ points: trackPoints, color: color }]);
+        }
+
+        function selectDayRoute(day) {
+            activeRouteDay = day;
+            
+            // UI tab updates
+            ['sab', 'dom', 'all'].forEach(key => {
+                const tab = document.getElementById(`route-tab-${key}`);
+                if (!tab) return;
+                if (key === day) {
+                    tab.className = "px-3 py-1 rounded-lg text-[11px] font-bold transition bg-tuscany-500 text-white";
+                } else {
+                    tab.className = "px-3 py-1 rounded-lg text-[11px] font-bold transition text-gray-400 hover:text-white";
+                }
+            });
+
+            if (day === 'all') {
+                const sabPoints = processCoordinatesToTrackData(defaultTracks.sab);
+                const D1 = sabPoints[sabPoints.length - 1].dist;
+
+                // Process Sunday starting from Saturday's end distance
+                let domPoints = [];
+                let cumulativeDistance = D1;
+                const rawDom = defaultTracks.dom;
+                for (let i = 0; i < rawDom.length; i++) {
+                    const pt = rawDom[i];
+                    if (i > 0) {
+                        const prev = rawDom[i - 1];
+                        cumulativeDistance += calculateHaversine(prev.lat, prev.lon, pt.lat, pt.lon);
+                    }
+                    domPoints.push({
+                        lat: pt.lat,
+                        lon: pt.lon,
+                        ele: pt.ele || 0,
+                        dist: parseFloat(cumulativeDistance.toFixed(2)),
+                        name: pt.name || ''
+                    });
+                }
+
+                currentTrackData = [...sabPoints, ...domPoints];
+                
+                renderTracksOnMap([
+                    { points: sabPoints, color: '#3b82f6' },
+                    { points: domPoints, color: '#f59e0b' }
+                ]);
+                buildElevationChartAll(sabPoints, domPoints);
+
+                const totalDistance = currentTrackData[currentTrackData.length - 1].dist;
+                document.getElementById('chart-stats').innerText = `Distanza totale: ${totalDistance} Km | Sab: ${D1} Km + Dom: ${(totalDistance - D1).toFixed(1)} Km`;
+            } else {
+                const rawPoints = defaultTracks[day];
+                currentTrackData = processCoordinatesToTrackData(rawPoints);
+                
+                const color = day === 'sab' ? '#3b82f6' : '#f59e0b';
+                renderTrackOnMap(currentTrackData, color);
+                buildElevationChart(currentTrackData, color);
+                
+                const totalDistance = currentTrackData[currentTrackData.length - 1].dist;
+                document.getElementById('chart-stats').innerText = `Distanza tracciato: ${totalDistance} Km | Punti: ${currentTrackData.length}`;
+            }
+        }
+
+        // GPX File Upload Parser
+        function loadCustomGPX(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const gpxText = e.target.result;
+                parseGPXText(gpxText);
+            };
+            reader.readAsText(file);
+        }
+
+        function parseGPXText(gpxText) {
+            try {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(gpxText, "text/xml");
+                const trkpts = xmlDoc.getElementsByTagName("trkpt");
+
+                if (trkpts.length === 0) {
+                    alert("Nessun punto traccia (trkpt) trovato nel file GPX!");
+                    return;
+                }
+
+                let coords = [];
+                for (let i = 0; i < trkpts.length; i++) {
+                    const node = trkpts[i];
+                    const lat = parseFloat(node.getAttribute("lat"));
+                    const lon = parseFloat(node.getAttribute("lon"));
+                    const eleNode = node.getElementsByTagName("ele")[0];
+                    const ele = eleNode ? parseFloat(eleNode.textContent) : 0;
+                    coords.push({ lat, lon, ele });
+                }
+
+                activeRouteDay = 'custom';
+                // Reset route tab buttons style
+                ['sab', 'dom'].forEach(key => {
+                    const tab = document.getElementById(`route-tab-${key}`);
+                    tab.className = "px-3 py-1 rounded-lg text-[11px] font-bold transition text-gray-400 hover:text-white";
+                });
+
+                currentTrackData = processCoordinatesToTrackData(coords);
+                renderTrackOnMap(currentTrackData, '#d97736');
+                buildElevationChart(currentTrackData, '#d97736');
+
+                const totalDistance = currentTrackData[currentTrackData.length - 1].dist;
+                document.getElementById('chart-stats').innerText = `Tracciato personalizzato: ${totalDistance} Km | Punti: ${currentTrackData.length}`;
+                
+                // Update general metrics badge
+                document.getElementById('total-dist-badge').innerText = `~${Math.round(totalDistance)}`;
+                
+                // Parse optional waypoints in GPX
+                const wpts = xmlDoc.getElementsByTagName("wpt");
+                if (wpts.length > 0) {
+                    for (let j = 0; j < wpts.length; j++) {
+                        const wNode = wpts[j];
+                        const lat = parseFloat(wNode.getAttribute("lat"));
+                        const lon = parseFloat(wNode.getAttribute("lon"));
+                        const nameNode = wNode.getElementsByTagName("name")[0];
+                        const name = nameNode ? nameNode.textContent : "Punto GPX";
+                        
+                        L.marker([lat, lon], {
+                            icon: L.divIcon({
+                                html: `<div class="flex items-center justify-center w-6 h-6 rounded-full shadow-lg border border-white text-white bg-tuscany-500"><i class="fa-solid fa-map-pin text-[10px]"></i></div>`,
+                                className: 'custom-div-icon',
+                                iconSize: [24, 24],
+                                iconAnchor: [12, 12]
+                            })
+                        }).addTo(mapInstance).bindPopup(`<h4 class="font-bold text-xs text-white">${name}</h4>`);
+                    }
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert("Errore nell'analisi del file GPX. Assicurati che sia valido.");
+            }
+        }
+
+        // --- ELEVATION CHART (CHART.JS) ---
+        function buildElevationChart(dataList, color = '#d97736') {
+            const ctx = document.getElementById('elevation-chart').getContext('2d');
+            
+            // X-axis: distances, Y-axis: elevations
+            const labels = dataList.map(p => p.dist);
+            const elevations = dataList.map(p => p.ele);
+
+            if (elevationChartInstance) {
+                elevationChartInstance.destroy();
+            }
+
+            elevationChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Altitudine',
+                        data: elevations,
+                        borderColor: color,
+                        borderWidth: 2,
+                        backgroundColor: 'rgba(217, 119, 54, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 0,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: '#ffffff',
+                        pointHoverBorderColor: color,
+                        pointHoverBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'category',
+                            title: {
+                                display: true,
+                                text: 'Distanza (Km)',
+                                color: '#9ca3af',
+                                font: { size: 9 }
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: { size: 8 },
+                                maxTicksLimit: 10
+                            },
+                            grid: { display: false }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Alt (m)',
+                                color: '#9ca3af',
+                                font: { size: 9 }
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: { size: 8 }
+                            },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            displayColors: false,
+                            backgroundColor: '#2e2a27',
+                            titleColor: '#fff',
+                            bodyColor: '#d97736',
+                            borderColor: '#d97736',
+                            borderWidth: 1,
+                            callbacks: {
+                                title: (tooltipItems) => `Distanza: ${tooltipItems[0].label} Km`,
+                                label: (tooltipItem) => `Quota: ${tooltipItem.raw} m`
+                            }
+                        }
+                    },
+                    onHover: (event, activeElements) => {
+                        if (activeElements && activeElements.length > 0) {
+                            const index = activeElements[0].index;
+                            const point = dataList[index];
+                            if (point) {
+                                drawHoverMarker(point.lat, point.lon, point.ele);
+                            }
+                        } else {
+                            clearHoverMarker();
+                        }
+                    }
+                }
+            });
+        }
+
+        function buildElevationChartAll(sabPoints, domPoints) {
+            const ctx = document.getElementById('elevation-chart').getContext('2d');
+            
+            const sabLabels = sabPoints.map(p => p.dist);
+            const domLabels = domPoints.map(p => p.dist);
+            const labels = [...sabLabels, ...domLabels];
+
+            const sabElevations = [...sabPoints.map(p => p.ele), ...domPoints.map(() => null)];
+            const domElevations = [...sabPoints.map((p, idx) => idx === sabPoints.length - 1 ? p.ele : null), ...domPoints.map(p => p.ele)];
+
+            if (elevationChartInstance) {
+                elevationChartInstance.destroy();
+            }
+
+            elevationChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Sabato',
+                            data: sabElevations,
+                            borderColor: '#3b82f6',
+                            borderWidth: 2,
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 0,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: '#ffffff',
+                            pointHoverBorderColor: '#3b82f6',
+                            pointHoverBorderWidth: 2
+                        },
+                        {
+                            label: 'Domenica',
+                            data: domElevations,
+                            borderColor: '#f59e0b',
+                            borderWidth: 2,
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 0,
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: '#ffffff',
+                            pointHoverBorderColor: '#f59e0b',
+                            pointHoverBorderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'category',
+                            title: {
+                                display: true,
+                                text: 'Distanza (Km)',
+                                color: '#9ca3af',
+                                font: { size: 9 }
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: { size: 8 },
+                                maxTicksLimit: 10
+                            },
+                            grid: { display: false }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Alt (m)',
+                                color: '#9ca3af',
+                                font: { size: 9 }
+                            },
+                            ticks: {
+                                color: '#6b7280',
+                                font: { size: 8 }
+                            },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            displayColors: false,
+                            backgroundColor: '#2e2a27',
+                            titleColor: '#fff',
+                            bodyColor: '#d97736',
+                            borderColor: '#d97736',
+                            borderWidth: 1,
+                            callbacks: {
+                                title: (tooltipItems) => `Distanza: ${tooltipItems[0].label} Km`,
+                                label: (tooltipItem) => `Quota: ${tooltipItem.raw} m`
+                            }
+                        }
+                    },
+                    onHover: (event, activeElements) => {
+                        if (activeElements && activeElements.length > 0) {
+                            const index = activeElements[0].index;
+                            const point = [...sabPoints, ...domPoints][index];
+                            if (point) {
+                                drawHoverMarker(point.lat, point.lon, point.ele);
+                            }
+                        } else {
+                            clearHoverMarker();
+                        }
+                    }
+                }
+            });
+        }
+
+        function drawHoverMarker(lat, lon, ele) {
+            if (hoverMarker) {
+                hoverMarker.setLatLng([lat, lon]);
+            } else {
+                hoverMarker = L.circleMarker([lat, lon], {
+                    color: '#ffffff',
+                    fillColor: '#d97736',
+                    fillOpacity: 1,
+                    radius: 7,
+                    weight: 3
+                }).addTo(mapInstance);
+            }
+            
+            // Pop an informative small popup dynamically (optional, deactivated for smoothness unless requested)
+            // hoverMarker.bindTooltip(`Alt: ${ele}m`, { permanent: false }).openTooltip();
+        }
+
+        function clearHoverMarker() {
+            if (hoverMarker) {
+                mapInstance.removeLayer(hoverMarker);
+                hoverMarker = null;
+            }
+        }
+
+        // --- TIMELINE FILTER ---
+        function filterTimeline(day) {
+            // Update active state in tabs
+            ['all', 'sab', 'dom'].forEach(key => {
+                const tab = document.getElementById(`timeline-tab-${key}`);
+                if (key === day) {
+                    tab.classList.add('bg-tuscany-500', 'text-white');
+                    tab.classList.remove('text-gray-400');
+                } else {
+                    tab.classList.remove('bg-tuscany-500', 'text-white');
+                    tab.classList.add('text-gray-400');
+                }
+            });
+
+            // Filter actual DOM items
+            const items = document.querySelectorAll('.timeline-item');
+            items.forEach(item => {
+                if (day === 'all') {
+                    item.style.display = 'block';
+                } else if (item.classList.contains(`day-${day}`)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // --- WEATHER SECTION (OPEN-METEO API) ---
+        const weatherCities = [
+            { name: "Santa Croce sull'Arno", lat: 43.7224, lon: 10.7744, key: 'sc' },
+            { name: "Gaiole in Chianti", lat: 43.4658, lon: 11.4339, key: 'gc' },
+            { name: "Montalcino", lat: 43.0581, lon: 11.4891, key: 'ml' },
+            { name: "Crete Senesi (Asciano)", lat: 43.2341, lon: 11.5739, key: 'cs' }
+        ];
+
+        let fetchedWeatherDataRaw = null;
+        let weatherMode = 'live'; // 'live', 'future', 'past', 'climate'
+        let activeWeatherDate = '';
+
+        function handleWeatherDateChange(event) {
+            const selectedDate = event.target.value;
+            if (!selectedDate) return;
+            fetchWeatherData(selectedDate);
+        }
+
+        function fetchWeatherData(selectedDateString) {
+            const listContainer = document.getElementById('weather-list');
+            listContainer.innerHTML = `
+                <div class="text-center py-4 text-xs text-gray-400">
+                    <i class="fa-solid fa-spinner animate-spin text-tuscany-500 mr-2"></i> Caricamento meteo...
+                </div>
+            `;
+
+            // If not provided, get from input, fallback to today
+            if (!selectedDateString) {
+                const input = document.getElementById('weather-date-input');
+                if (input && input.value) {
+                    selectedDateString = input.value;
+                } else {
+                    selectedDateString = new Date().toISOString().split('T')[0];
+                }
+            }
+
+            activeWeatherDate = selectedDateString;
+            
+            // Set date input value just in case
+            const input = document.getElementById('weather-date-input');
+            if (input) {
+                input.value = selectedDateString;
+            }
+
+            // Date math
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            
+            const selected = new Date(selectedDateString);
+            selected.setHours(0,0,0,0);
+            
+            const diffTime = selected.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            const lats = weatherCities.map(c => c.lat).join(',');
+            const lons = weatherCities.map(c => c.lon).join(',');
+            
+            let url = '';
+            
+            if (diffDays === 0) {
+                // Today: Live Current Weather + 3-day forecast
+                weatherMode = 'live';
+                url = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Europe/Rome`;
+            } else if (diffDays > 0 && diffDays <= 15) {
+                // Future forecast (up to 15 days ahead)
+                weatherMode = 'future';
+                const endDate = new Date(selected);
+                endDate.setDate(selected.getDate() + 2);
+                const endDateString = endDate.toISOString().split('T')[0];
+                url = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&start_date=${selectedDateString}&end_date=${endDateString}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Europe/Rome`;
+            } else if (diffDays < 0 && diffDays >= -365 * 10) {
+                // Past archive (up to 10 years ago)
+                weatherMode = 'past';
+                const endDate = new Date(selected);
+                endDate.setDate(selected.getDate() + 2);
+                const endDateString = endDate.toISOString().split('T')[0];
+                url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lats}&longitude=${lons}&start_date=${selectedDateString}&end_date=${endDateString}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Europe/Rome`;
+            } else {
+                // Far future (> 15 days ahead) -> Use last year's archive as climatology estimate
+                weatherMode = 'climate';
+                const lastYearDate = new Date(selected);
+                lastYearDate.setFullYear(lastYearDate.getFullYear() - 1);
+                const lyStartString = lastYearDate.toISOString().split('T')[0];
+                
+                const lastYearEndDate = new Date(lastYearDate);
+                lastYearEndDate.setDate(lastYearDate.getDate() + 2);
+                const lyEndString = lastYearEndDate.toISOString().split('T')[0];
+                
+                url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lats}&longitude=${lons}&start_date=${lyStartString}&end_date=${lyEndString}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Europe/Rome`;
+            }
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    fetchedWeatherDataRaw = Array.isArray(data) ? data : [data];
+                    renderWeatherBadges();
+                })
+                .catch(err => {
+                    console.error("Meteo error:", err);
+                    listContainer.innerHTML = `
+                        <div class="p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-2xl text-xs text-center flex flex-col items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                            <span>Connessione meteo fallita (Offline)</span>
+                        </div>
+                    `;
+                });
+        }
+
+        // Mapping weather codes (WMO) to FontAwesome icons
+        function getWeatherIcon(code) {
+            if (code === 0) return { icon: 'fa-solid fa-sun', color: 'text-amber-400', desc: 'Sole' };
+            if ([1, 2, 3].includes(code)) return { icon: 'fa-solid fa-cloud-sun', color: 'text-gray-300', desc: 'Nuvoloso' };
+            if ([45, 48].includes(code)) return { icon: 'fa-solid fa-smog', color: 'text-slate-400', desc: 'Nebbia' };
+            if ([51, 53, 55, 56, 57].includes(code)) return { icon: 'fa-solid fa-cloud-rain', color: 'text-blue-400', desc: 'Pioggerellina' };
+            if ([61, 63, 65, 66, 67].includes(code)) return { icon: 'fa-solid fa-cloud-showers-heavy', color: 'text-blue-500', desc: 'Pioggia' };
+            if ([71, 73, 75, 77].includes(code)) return { icon: 'fa-solid fa-snowflake', color: 'text-sky-300', desc: 'Neve' };
+            if ([80, 81, 82].includes(code)) return { icon: 'fa-solid fa-cloud-showers-water', color: 'text-blue-600', desc: 'Rovesci' };
+            if ([95, 96, 99].includes(code)) return { icon: 'fa-solid fa-cloud-bolt', color: 'text-purple-400', desc: 'Temporale' };
+            return { icon: 'fa-solid fa-circle-question', color: 'text-gray-400', desc: 'Variabile' };
+        }
+
+        function renderWeatherBadges() {
+            const listContainer = document.getElementById('weather-list');
+            listContainer.innerHTML = '';
+
+            let modeText = "Live";
+            if (weatherMode === 'future') modeText = "Previsto";
+            if (weatherMode === 'past') modeText = "Storico";
+            if (weatherMode === 'climate') {
+                const year = new Date(activeWeatherDate).getFullYear() - 1;
+                modeText = `Storico ${year}`;
+            }
+
+            weatherCities.forEach((city, index) => {
+                const cData = fetchedWeatherDataRaw[index];
+                if (!cData || !cData.daily) return;
+
+                let tempHTML = '';
+                let weatherInfo = null;
+
+                if (weatherMode === 'live' && cData.current) {
+                    const t2m = cData.current.temperature_2m;
+                    const code = cData.current.weather_code;
+                    weatherInfo = getWeatherIcon(code);
+                    tempHTML = `<span class="text-sm font-black text-white font-title">${Math.round(t2m)}°C</span>`;
+                } else {
+                    const min = cData.daily.temperature_2m_min[0];
+                    const max = cData.daily.temperature_2m_max[0];
+                    const code = cData.daily.weather_code[0];
+                    weatherInfo = getWeatherIcon(code);
+                    tempHTML = `
+                        <div class="text-right">
+                            <span class="text-xs font-bold text-tuscany-500 block">${Math.round(max)}°C</span>
+                            <span class="text-[10px] text-gray-400">${Math.round(min)}°C</span>
+                        </div>
+                    `;
+                }
+
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center p-3 bg-white/[0.02] border border-white/5 hover:border-tuscany-500/30 rounded-2xl cursor-pointer transition glass-card-hover";
+                item.onclick = () => openWeatherModal(index);
+                item.innerHTML = `
+                    <div>
+                        <span class="text-xs font-bold text-white block">${city.name}</span>
+                        <span class="text-[10px] text-gray-400">${weatherInfo.desc} <span class="text-[9px] text-gray-500 font-normal">(${modeText})</span></span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="${weatherInfo.icon} ${weatherInfo.color} text-lg"></i>
+                        ${tempHTML}
+                    </div>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function openWeatherModal(index) {
+            const city = weatherCities[index];
+            const cData = fetchedWeatherDataRaw[index];
+            if (!cData || !cData.daily) return;
+
+            let titleText = `Meteo: ${city.name}`;
+            if (weatherMode === 'climate') {
+                titleText = `Meteo Storico: ${city.name}`;
+            }
+            document.getElementById('modal-city-name').innerText = titleText;
+            
+            const modalBody = document.getElementById('modal-forecast-body');
+            modalBody.innerHTML = '';
+
+            const daily = cData.daily;
+            
+            for (let i = 0; i < 3; i++) {
+                if (!daily.time[i]) continue;
+                const dateRaw = new Date(daily.time[i]);
+                
+                let dayName = dateRaw.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'short' });
+                if (weatherMode === 'climate') {
+                    const targetYear = new Date(activeWeatherDate);
+                    targetYear.setDate(targetYear.getDate() + i);
+                    const labelDay = targetYear.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'short' });
+                    dayName = `${labelDay} (Storico ${dateRaw.getFullYear()})`;
+                }
+                
+                const weatherInfo = getWeatherIcon(daily.weather_code[i]);
+                const min = Math.round(daily.temperature_2m_min[i]);
+                const max = Math.round(daily.temperature_2m_max[i]);
+
+                const fRow = document.createElement('div');
+                fRow.className = "flex items-center justify-between p-3.5 bg-white/5 rounded-2xl border border-white/5";
+                fRow.innerHTML = `
+                    <div>
+                        <span class="text-xs font-bold text-white block capitalize">${dayName}</span>
+                        <span class="text-[10px] text-gray-400">${weatherInfo.desc}</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <i class="${weatherInfo.icon} ${weatherInfo.color} text-lg"></i>
+                        <div class="text-right">
+                            <span class="text-xs font-bold text-tuscany-500 block">${max}°C</span>
+                            <span class="text-[10px] text-gray-400">${min}°C</span>
+                        </div>
+                    </div>
+                `;
+                modalBody.appendChild(fRow);
+            }
+
+            const modal = document.getElementById('weather-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeWeatherModal() {
+            const modal = document.getElementById('weather-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // --- CHECKLIST SECTION ---
+        function renderChecklist() {
+            renderChecklistCategory('moto', 'check-cat-moto-body');
+            renderChecklistCategory('vest', 'check-cat-vest-body');
+            renderChecklistCategory('tech', 'check-cat-tech-body');
+            updateChecklistProgress();
+        }
+
+        function renderChecklistCategory(catKey, elementId) {
+            const body = document.getElementById(elementId);
+            body.innerHTML = '';
+
+            if (checklist[catKey].length === 0) {
+                body.innerHTML = '<p class="text-[10px] text-gray-500 italic">Nessun oggetto presente</p>';
+                return;
+            }
+
+            checklist[catKey].forEach(item => {
+                const row = document.createElement('div');
+                row.className = "flex items-start justify-between gap-3 p-2 hover:bg-white/5 rounded-xl transition group/check";
+                row.innerHTML = `
+                    <div class="flex items-start gap-2.5">
+                        <input type="checkbox" id="${item.id}" ${item.checked ? 'checked' : ''} onchange="toggleChecklistItem('${catKey}', '${item.id}')" class="mt-0.5 w-4 h-4 accent-tuscany-500 rounded border-gray-600 bg-gray-700">
+                        <label for="${item.id}" class="text-xs ${item.checked ? 'text-gray-500 line-through' : 'text-gray-300'} cursor-pointer select-none leading-normal">
+                            ${item.desc}
+                        </label>
+                    </div>
+                    <!-- Delete button shown only for custom items (custom items start with custom-) -->
+                    ${item.id.startsWith('custom-') ? `
+                        <button onclick="removeChecklistItem('${catKey}', '${item.id}')" class="text-red-500 opacity-0 group-hover/check:opacity-100 transition hover:text-red-400">
+                            <i class="fa-solid fa-trash-can text-[10px]"></i>
+                        </button>
+                    ` : ''}
+                `;
+                body.appendChild(row);
+            });
+        }
+
+        function toggleChecklistItem(catKey, itemId) {
+            const item = checklist[catKey].find(i => i.id === itemId);
+            if (item) {
+                item.checked = !item.checked;
+                saveState('eroica_checklist', checklist);
+                renderChecklist();
+            }
+        }
+
+        function addCustomChecklistItem() {
+            const descInput = document.getElementById('new-item-desc');
+            const catSelect = document.getElementById('new-item-cat');
+            
+            const desc = descInput.value.trim();
+            const cat = catSelect.value;
+
+            if (!desc) return;
+
+            const newItem = {
+                id: `custom-${Date.now()}`,
+                desc: desc,
+                checked: false
+            };
+
+            checklist[cat].push(newItem);
+            saveState('eroica_checklist', checklist);
+            
+            descInput.value = '';
+            
+            // Expand accordion if closed
+            const accordionBody = document.getElementById(`check-cat-${cat}-body`);
+            if (accordionBody.classList.contains('hidden')) {
+                toggleAccordion(`check-cat-${cat}`);
+            }
+
+            renderChecklist();
+        }
+
+        function removeChecklistItem(catKey, itemId) {
+            checklist[catKey] = checklist[catKey].filter(i => i.id !== itemId);
+            saveState('eroica_checklist', checklist);
+            renderChecklist();
+        }
+
+        function toggleAccordion(id) {
+            const body = document.getElementById(`${id}-body`);
+            const arrow = document.getElementById(`${id}-arrow`);
+            
+            if (body.classList.contains('hidden')) {
+                body.classList.remove('hidden');
+                arrow.classList.remove('fa-chevron-down');
+                arrow.classList.add('fa-chevron-up');
+            } else {
+                body.classList.add('hidden');
+                arrow.classList.add('fa-chevron-down');
+                arrow.classList.remove('fa-chevron-up');
+            }
+        }
+
+        function updateChecklistProgress() {
+            let total = 0;
+            let checked = 0;
+
+            Object.keys(checklist).forEach(cat => {
+                total += checklist[cat].length;
+                checked += checklist[cat].filter(item => item.checked).length;
+            });
+
+            const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
+            
+            // Update Text
+            document.getElementById('checklist-progress-text').innerText = `${percent}%`;
+            
+            // Update SVG dashoffset
+            // r=18 => Circumference = 2 * PI * 18 = 113.1
+            const circle = document.getElementById('checklist-progress-circle');
+            const offset = 113.1 * (1 - (percent / 100));
+            circle.style.strokeDashoffset = offset;
+        }
+
+        // --- FOTO IMPERDIBILI SECTION ---
+        function renderPhotoChecklist() {
+            const container = document.getElementById('photo-checklist-container');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            photoChecklist.forEach(item => {
+                const row = document.createElement('div');
+                row.className = "flex items-start gap-2.5 p-2 hover:bg-white/5 rounded-xl transition";
+                row.innerHTML = `
+                    <input type="checkbox" id="${item.id}" ${item.checked ? 'checked' : ''} onchange="togglePhotoItem('${item.id}')" class="mt-0.5 w-4 h-4 accent-tuscany-500 rounded border-gray-600 bg-gray-700">
+                    <label for="${item.id}" class="text-xs cursor-pointer select-none leading-normal ${item.checked ? 'text-gray-500 line-through' : 'text-gray-300'}">
+                        <strong class="${item.checked ? 'text-gray-500' : 'text-white'}">${item.label}</strong> – ${item.desc}
+                    </label>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function togglePhotoItem(itemId) {
+            const item = photoChecklist.find(i => i.id === itemId);
+            if (item) {
+                item.checked = !item.checked;
+                saveState('eroica_photo_checklist', photoChecklist);
+                renderPhotoChecklist();
+            }
+        }
+    </script>
+</body>
+</html>
