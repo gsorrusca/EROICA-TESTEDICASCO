@@ -192,6 +192,12 @@
                             <button onclick="selectDayRoute('dom')" id="route-tab-dom" class="px-3 py-1 rounded-lg text-[11px] font-bold transition text-gray-400 hover:text-white">Domenica</button>
                         </div>
 
+                        <!-- Fuel Station Toggle Button -->
+                        <button onclick="toggleFuelStations()" id="btn-toggle-fuel" class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold transition-all border border-white/5 bg-[#120f0e] text-gray-400 hover:text-white flex items-center gap-1 mr-2">
+                            <i class="fa-solid fa-gas-pump text-[10px]"></i>
+                            <span>Benzinai</span>
+                        </button>
+
                         <!-- Map Layer Selector -->
                         <div class="flex items-center gap-1 bg-[#120f0e] p-0.5 rounded-xl border border-white/5">
                             <button onclick="changeMapLayer('voyager')" id="btn-layer-voyager" class="px-2.5 py-1 text-[10px] font-bold text-white bg-tuscany-600 rounded-lg transition-all">Mappa</button>
@@ -592,6 +598,31 @@
         let elevationChartInstance = null;
         let activeRouteDay = 'sab'; // 'sab' or 'dom' or 'custom'
         
+        // --- FUEL STATIONS DATA ---
+        let showFuelStations = false;
+        let fuelMarkers = [];
+        const fuelStations = [
+            { name: "AgipEni (Santa Croce)", coords: [43.726585, 10.757616], note: "Self-service, via Provinciale Nuova Francesca Km 8" },
+            { name: "Eni Lepori snc (Santa Croce)", coords: [43.717125, 10.775406], note: "Vicino al punto di partenza, via del Bosco 170" },
+            { name: "Gianni Fontanelli (Santa Croce)", coords: [43.70615, 10.77216], note: "Servito, via Provinciale Francesca Sud 285/a" },
+            { name: "Distributore IP (Gaiole)", coords: [43.466970, 11.433860], note: "Stazione IP aperta 24 ore su 24, Ss 408 N. Snc" },
+            { name: "Stazione di servizio ENI (Montalcino)", coords: [43.076813, 11.546537], note: "Self-service Cassia SNC. Aperto anche Sabato" },
+            { name: "Distributore Q8 (Buonconvento)", coords: [43.137508, 11.481829], note: "Self-service, Via Cassia S.S. n. 2" },
+            { name: "Tuscia Petroli (Buonconvento)", coords: [43.1204, 11.4831], note: "Self-service Sr 2" },
+            { name: "Stazione di servizio Agip Eni (Radda)", coords: [43.489647, 11.388073], note: "Self-service, Radda in Chianti" }
+        ];
+
+        // Global Helper for leaflet icons
+        function customIconHTML(icon, bgClass) {
+            return L.divIcon({
+                html: `<div class="flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 border-white text-white ${bgClass}"><i class="${icon} text-xs"></i></div>`,
+                className: 'custom-div-icon',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16],
+                popupAnchor: [0, -16]
+            });
+        }
+        
         let photoChecklist = [
             { id: "photo-brolio", label: "Castello di Brolio", desc: "La strada bianca tra i cipressi", checked: false },
             { id: "photo-montalcino", label: "Montalcino", desc: "Panorama sulla valle", checked: false },
@@ -807,17 +838,6 @@
         }
 
         function renderWaypointMarkers() {
-            // Helper to generate FontAwesome marker html
-            const customIconHTML = (icon, bgClass) => {
-                return L.divIcon({
-                    html: `<div class="flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 border-white text-white ${bgClass}"><i class="${icon} text-xs"></i></div>`,
-                    className: 'custom-div-icon',
-                    iconSize: [32, 32],
-                    iconAnchor: [16, 16],
-                    popupAnchor: [0, -16]
-                });
-            };
-
             staticWaypoints.forEach(wp => {
                 let icon;
                 if (wp.type === 'start') icon = customIconHTML('fa-solid fa-motorcycle', 'bg-blue-600');
@@ -1693,6 +1713,38 @@
                 item.checked = !item.checked;
                 saveState('eroica_photo_checklist', photoChecklist);
                 renderPhotoChecklist();
+            }
+        }
+
+        function toggleFuelStations() {
+            showFuelStations = !showFuelStations;
+            const btn = document.getElementById('btn-toggle-fuel');
+            
+            if (showFuelStations) {
+                btn.classList.remove('bg-[#120f0e]', 'text-gray-400');
+                btn.classList.add('bg-orange-600', 'text-white', 'border-orange-500/20');
+                
+                fuelStations.forEach(station => {
+                    const icon = customIconHTML('fa-solid fa-gas-pump', 'bg-orange-600');
+                    const marker = L.marker(station.coords, { icon: icon })
+                        .addTo(mapInstance)
+                        .bindTooltip(`
+                            <div class="p-0.5">
+                                <h4 class="font-bold text-xs text-white">${station.name}</h4>
+                                <p class="text-[10px] text-gray-300 mt-1.5 leading-relaxed">${station.note}</p>
+                            </div>
+                        `, {
+                            direction: 'top',
+                            opacity: 0.95
+                        });
+                    fuelMarkers.push(marker);
+                });
+            } else {
+                btn.classList.remove('bg-orange-600', 'text-white', 'border-orange-500/20');
+                btn.classList.add('bg-[#120f0e]', 'text-gray-400');
+                
+                fuelMarkers.forEach(marker => mapInstance.removeLayer(marker));
+                fuelMarkers = [];
             }
         }
     </script>
