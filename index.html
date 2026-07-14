@@ -234,6 +234,12 @@
                             <span>Benzinai</span>
                         </button>
 
+                        <!-- Monte Sante Marie Toggle Button -->
+                        <button onclick="toggleMsmOverlay()" id="btn-toggle-msm" class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold transition-all border border-white/5 bg-[#120f0e] text-gray-400 hover:text-white flex items-center gap-1 mr-2">
+                            <i class="fa-solid fa-route text-[10px]"></i>
+                            <span>Tracciato MSM</span>
+                        </button>
+
                         <!-- Map Layer Selector -->
                         <div class="flex items-center gap-1 bg-[#120f0e] p-0.5 rounded-xl border border-white/5">
                             <button onclick="changeMapLayer('voyager')" id="btn-layer-voyager" class="px-2.5 py-1 text-[10px] font-bold text-white bg-tuscany-600 rounded-lg transition-all">Mappa</button>
@@ -569,7 +575,7 @@
                                     <!-- Left side: Map Image -->
                                     <div class="md:col-span-4 flex flex-col justify-start">
                                         <div class="rounded-xl overflow-hidden border border-white/10 shadow-lg relative group">
-                                            <img src="Monte Sante Marie.png" alt="Mappa Monte Sante Marie" class="w-full h-auto object-cover hover:scale-105 transition-all duration-500" />
+                                            <img src="Monte%20Sante%20Marie.png" alt="Mappa Monte Sante Marie" class="w-full h-auto object-cover hover:scale-105 transition-all duration-500" />
                                             <div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg p-1.5 text-[9px] text-gray-300 text-center">
                                                 Visualizzazione Tratto Sterrato
                                             </div>
@@ -950,6 +956,8 @@
         let activeRouteDay = 'sab'; // 'sab' or 'dom' or 'custom'
         let msmGpxPoints = [];
         let isShowingMsmDetails = false;
+        let showMsmOverlay = false;
+        let msmOverlayPolyline = null;
         
         // --- FUEL STATIONS DATA ---
         let showFuelStations = false;
@@ -1094,12 +1102,6 @@
                 } else {
                     // Fallback to zoom on coordinates if GPX is not loaded
                     focusOnPoint([43.2341, 11.5739], 13);
-                }
-                
-                // Scroll smoothly to map container
-                const mapEl = document.getElementById('map');
-                if (mapEl) {
-                    smoothScrollTo(mapEl, 1200);
                 }
             }
         }
@@ -2241,6 +2243,38 @@
                 
                 fuelMarkers.forEach(marker => mapInstance.removeLayer(marker));
                 fuelMarkers = [];
+            }
+        }
+
+        function toggleMsmOverlay() {
+            if (!msmGpxPoints || msmGpxPoints.length === 0) {
+                alert("Tracciato Monte Sante Marie non ancora caricato o non disponibile.");
+                return;
+            }
+            showMsmOverlay = !showMsmOverlay;
+            const btn = document.getElementById('btn-toggle-msm');
+            
+            if (showMsmOverlay) {
+                btn.classList.remove('bg-[#120f0e]', 'text-gray-400');
+                btn.classList.add('bg-purple-600', 'text-white', 'border-purple-500/20');
+                
+                if (!msmOverlayPolyline) {
+                    msmOverlayPolyline = L.polyline(msmGpxPoints.map(p => [p.lat, p.lon]), {
+                        color: '#d946ef', // Bright magenta
+                        weight: 6,
+                        opacity: 0.85,
+                        dashArray: '10, 8'
+                    }).bindTooltip("<span class='font-bold text-xs text-purple-400'>Tracciato Monte Sante Marie (Off-road)</span>", { sticky: true });
+                }
+                msmOverlayPolyline.addTo(mapInstance);
+                mapInstance.fitBounds(msmOverlayPolyline.getBounds(), { padding: [50, 50] });
+            } else {
+                btn.classList.remove('bg-purple-600', 'text-white', 'border-purple-500/20');
+                btn.classList.add('bg-[#120f0e]', 'text-gray-400');
+                
+                if (msmOverlayPolyline) {
+                    mapInstance.removeLayer(msmOverlayPolyline);
+                }
             }
         }
     </script>
