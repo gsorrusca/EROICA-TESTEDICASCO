@@ -42,7 +42,7 @@ Pianificazione dettagliata per un weekend alla scoperta del percorso dell'Eroica
 | Orario | Tappa | Coordinate GPS | Attività | Durata |
 |--------|-------|----------------|----------|--------|
 | **14:00** | **Murlo** (territorio comunale) | `43.1607, 11.3880`[reference:2] | Affascinante comune con bellissime strade bianche e paesaggi delle Crete[reference:3]. Sosta fotografica. | 20 min |
-| **14:20** | **Bibbiano** | `43.1100, 11.4800` (approssimative) | Località tra Murlo e Montalcino[reference:4]. Zona collinare suggestiva con vista sulla valle dell'Ombrone[reference:5]. | 15 min |
+| **14:20** | **Bibbiano** | `43.1239, 11.4486` | Località tra Murlo e Montalcino[reference:4]. Zona collinare suggestiva con vista sulla valle dell'Ombrone[reference:5]. | 15 min |
 | **14:35** | **Lucignano d'Asso** | `43.1237, 11.5917`[reference:6] | Piccolo borgo medievale[reference:7]. Sosta per foto e panorami. | 20 min |
 | **14:55** | **Torrenieri** | `43.0875, 11.5482`[reference:8] | Frazione di Montalcino[reference:9], famosa per i vigneti di Brunello[reference:10]. Sosta tra i filari. | 15 min |
 | **15:10** | **Montalcino** (Pernotto) | `43.055043, 11.489142` | Famoso per il Brunello. Strade bianche con pendenze >15% ed enogastronomia toscana di altissimo livello. | Arrivo e sistemazione |
