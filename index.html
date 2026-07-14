@@ -153,6 +153,19 @@
             animation: map-pulse-animation 0.8s ease-out 4; /* exactly 4 pulses */
             opacity: 0;
         }
+        @keyframes pulse-subtle {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5);
+            }
+            50% {
+                transform: scale(1.04);
+                box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+            }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 2s infinite ease-in-out;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-tuscany-500 selection:text-white pb-6">
@@ -562,7 +575,7 @@
                             
                             <!-- Accordion Toggle Button -->
                             <div class="mt-3">
-                                <button onclick="toggleMsmDetails()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500/25 border border-tuscany-500/30 rounded-xl text-[10px] font-bold text-tuscany-400 hover:text-white transition-all cursor-pointer">
+                                <button onclick="toggleMsmDetails()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-400 hover:bg-amber-500 text-black border border-amber-300 rounded-xl text-[10px] font-extrabold transition-all cursor-pointer shadow-md shadow-amber-400/10 hover:scale-105 animate-pulse-subtle">
                                     <i class="fa-solid fa-circle-info"></i>
                                     <span>DETTAGLI PERCORSO</span>
                                     <i id="msm-arrow" class="fa-solid fa-chevron-down text-[8px] transition-transform duration-200"></i>
@@ -575,7 +588,7 @@
                                     <!-- Left side: Map Image -->
                                     <div class="md:col-span-4 flex flex-col justify-start">
                                         <div class="rounded-xl overflow-hidden border border-white/10 shadow-lg relative group">
-                                            <img src="Monte%20Sante%20Marie.png" alt="Mappa Monte Sante Marie" class="w-full h-auto object-cover hover:scale-105 transition-all duration-500" />
+                                            <img src="monte-sante-marie.png" alt="Mappa Monte Sante Marie" class="w-full h-auto object-cover hover:scale-105 transition-all duration-500" />
                                             <div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg p-1.5 text-[9px] text-gray-300 text-center">
                                                 Visualizzazione Tratto Sterrato
                                             </div>
