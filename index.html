@@ -541,16 +541,99 @@
                         <div onclick="focusOnPoint([43.2341, 11.5739], 13)" class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-trophy text-[10px]"></i>
                         </div>
-                        <div class="flex items-start justify-between gap-4">
-                            <div>
-                                <span class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA · 11:15</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.2341, 11.5739], 13)">Monte Sante Marie</h3>
-                                <p class="text-gray-400 text-xs mt-1">Il leggendario e tecnico tratto sterrato delle Crete Senesi. Guida in piedi sulle pedane per divertimento e adrenalina.</p>
+                        <div class="flex flex-col w-full">
+                            <div class="flex items-start justify-between gap-4">
+                                <div>
+                                    <span class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA · 11:15</span>
+                                    <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.2341, 11.5739], 13)">Monte Sante Marie</h3>
+                                    <p class="text-gray-400 text-xs mt-1">Il leggendario e tecnico tratto sterrato delle Crete Senesi. Guida in piedi sulle pedane per divertimento e adrenalina.</p>
+                                </div>
+                                <a href="https://www.google.com/maps/dir/?api=1&destination=43.2341,11.5739" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
+                                    <i class="fa-solid fa-location-arrow text-[9px]"></i>
+                                    <span>NAVIGA</span>
+                                </a>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.2341,11.5739" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
-                                <i class="fa-solid fa-location-arrow text-[9px]"></i>
-                                <span>NAVIGA</span>
-                            </a>
+                            
+                            <!-- Accordion Toggle Button -->
+                            <div class="mt-3">
+                                <button onclick="toggleMsmDetails()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500/25 border border-tuscany-500/30 rounded-xl text-[10px] font-bold text-tuscany-400 hover:text-white transition-all cursor-pointer">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span>DETTAGLI PERCORSO</span>
+                                    <i id="msm-arrow" class="fa-solid fa-chevron-down text-[8px] transition-transform duration-200"></i>
+                                </button>
+                            </div>
+
+                            <!-- Accordion Content -->
+                            <div id="msm-details" class="hidden mt-4 bg-[#1a1614]/80 border border-white/5 rounded-2xl p-4 overflow-hidden transition-all duration-300">
+                                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                                    <!-- Left side: Map Image -->
+                                    <div class="md:col-span-4 flex flex-col justify-start">
+                                        <div class="rounded-xl overflow-hidden border border-white/10 shadow-lg relative group">
+                                            <img src="Monte Sante Marie.png" alt="Mappa Monte Sante Marie" class="w-full h-auto object-cover hover:scale-105 transition-all duration-500" />
+                                            <div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg p-1.5 text-[9px] text-gray-300 text-center">
+                                                Visualizzazione Tratto Sterrato
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Quick Info Box -->
+                                        <div class="mt-3 bg-[#241e1c] rounded-xl p-3 border border-white/5 space-y-1.5">
+                                            <div class="flex justify-between text-[10px]">
+                                                <span class="text-gray-400">Lunghezza:</span>
+                                                <span class="text-white font-bold">~11,5 km</span>
+                                            </div>
+                                            <div class="flex justify-between text-[10px]">
+                                                <span class="text-gray-400">Pendenza Max:</span>
+                                                <span class="text-red-400 font-bold">20%</span>
+                                            </div>
+                                            <div class="flex justify-between text-[10px]">
+                                                <span class="text-gray-400">Fondo:</span>
+                                                <span class="text-amber-500 font-bold">Sterrato sassoso</span>
+                                            </div>
+                                            <div class="flex justify-between text-[10px]">
+                                                <span class="text-gray-400">Dislivello:</span>
+                                                <span class="text-white font-bold">~230 m</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Right side: Description -->
+                                    <div class="md:col-span-8 space-y-4">
+                                        <div>
+                                            <h4 class="text-xs font-bold text-tuscany-400 uppercase tracking-wider mb-2">I 4 Settori del Tracciato</h4>
+                                            <div class="space-y-2">
+                                                <div class="bg-white/5 p-2.5 rounded-lg border border-white/5">
+                                                    <span class="text-[9px] font-bold text-blue-400 uppercase block">Settore 1 · Partenza da Asciano (~2 km)</span>
+                                                    <p class="text-[10px] text-gray-300 mt-1">Si lascia l'abitato di Asciano su strada bianca ondulata (pendenza fino al 12%). Fondo sassoso.</p>
+                                                </div>
+                                                <div class="bg-red-500/10 p-2.5 rounded-lg border border-red-500/20">
+                                                    <span class="text-[9px] font-bold text-red-400 uppercase block">Settore 2 · La Salita di Cancellara (~1,5 km)</span>
+                                                    <p class="text-[10px] text-gray-300 mt-1"><strong>Pendenze fino al 20%</strong> su fondo sconnesso. Include il cippo dedicato a Fabian Cancellara (Spartacus). Il tratto più impegnativo dell'Eroica.</p>
+                                                </div>
+                                                <div class="bg-white/5 p-2.5 rounded-lg border border-white/5">
+                                                    <span class="text-[9px] font-bold text-blue-400 uppercase block">Settore 3 · Discesa e Seconda Salita (~2 km)</span>
+                                                    <p class="text-[10px] text-gray-300 mt-1">Breve discesa seguita da una seconda salita con pendenze costanti intorno al 10%.</p>
+                                                </div>
+                                                <div class="bg-white/5 p-2.5 rounded-lg border border-white/5">
+                                                    <span class="text-[9px] font-bold text-blue-400 uppercase block">Settore 4 · Cresta e Arrivo (~6 km)</span>
+                                                    <p class="text-[10px] text-gray-300 mt-1">Saliscendi in cresta e curve polverose con panorami spettacolari sulle Crete Senesi. Si conclude a Torre a Castello.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Riding Tips Box -->
+                                        <div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-3">
+                                            <h5 class="text-[10px] font-bold text-amber-500 uppercase tracking-wide flex items-center gap-1">
+                                                <i class="fa-solid fa-motorcycle"></i> Consigli di Guida in Moto
+                                            </h5>
+                                            <ul class="list-disc pl-4 text-[9px] text-gray-300 mt-1.5 space-y-1">
+                                                <li>Pneumatici tassellati o misti con pressione leggermente abbassata.</li>
+                                                <li>Guida in piedi sulle pedane per stabilità sui tratti sconnessi e pendenze.</li>
+                                                <li>Tieni il motore in coppia ed evita accelerate brusche per non perdere aderenza.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -865,6 +948,8 @@
         let hoverMarker = null;
         let elevationChartInstance = null;
         let activeRouteDay = 'sab'; // 'sab' or 'dom' or 'custom'
+        let msmGpxPoints = [];
+        let isShowingMsmDetails = false;
         
         // --- FUEL STATIONS DATA ---
         let showFuelStations = false;
@@ -923,6 +1008,101 @@
                 { id: 't-5', desc: 'Salviette umide per pulizia visiera casco', checked: false }
             ]
         };
+
+        // --- MONTE SANTE MARIE GPX LOADING & INTERACTIONS ---
+        function loadMsmGPX() {
+            fetch('./Monte%20Sante%20Marie.gpx')
+                .then(res => {
+                    if (!res.ok) throw new Error("File Monte Sante Marie GPX non trovato");
+                    return res.text();
+                })
+                .then(gpxText => {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(gpxText, "text/xml");
+                    const trkpts = xmlDoc.getElementsByTagName("trkpt");
+                    
+                    if (trkpts.length === 0) return;
+
+                    let gpxPoints = [];
+                    for (let i = 0; i < trkpts.length; i++) {
+                        const node = trkpts[i];
+                        const lat = parseFloat(node.getAttribute("lat"));
+                        const lon = parseFloat(node.getAttribute("lon"));
+                        gpxPoints.push({ lat, lon, ele: 290 }); // default fallback elevation
+                    }
+                    msmGpxPoints = gpxPoints;
+                })
+                .catch(err => {
+                    console.warn("Impossibile caricare il GPX di Monte Sante Marie:", err);
+                });
+        }
+
+        function estimateMsmElevation(dist, totalDist) {
+            // Normalize to 11.5 km
+            const x = (dist / totalDist) * 11.5;
+            if (x < 2.0) {
+                return 250 + (x / 2.0) * 80;
+            } else if (x < 3.5) {
+                return 330 + ((x - 2.0) / 1.5) * 90;
+            } else if (x < 4.5) {
+                return 420 - ((x - 3.5) / 1.0) * 30;
+            } else if (x < 5.5) {
+                return 390 + ((x - 4.5) / 1.0) * 40;
+            } else {
+                return 430 + ((x - 5.5) / 6.0) * 50 + Math.sin((x - 5.5) * Math.PI) * 15;
+            }
+        }
+
+        function toggleMsmDetails() {
+            const details = document.getElementById('msm-details');
+            const arrow = document.getElementById('msm-arrow');
+            if (!details) return;
+
+            if (isShowingMsmDetails) {
+                // Close
+                details.classList.add('hidden');
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+                isShowingMsmDetails = false;
+                
+                // Restore active route
+                selectDayRoute(activeRouteDay);
+            } else {
+                // Open
+                details.classList.remove('hidden');
+                if (arrow) arrow.style.transform = 'rotate(180deg)';
+                isShowingMsmDetails = true;
+                
+                // Draw Monte Sante Marie GPX if loaded
+                if (msmGpxPoints && msmGpxPoints.length > 0) {
+                    let tempPoints = processCoordinatesToTrackData(msmGpxPoints);
+                    const totalDist = tempPoints[tempPoints.length - 1].dist;
+                    
+                    const processedMsmPoints = tempPoints.map(pt => {
+                        pt.ele = parseFloat(estimateMsmElevation(pt.dist, totalDist).toFixed(1));
+                        return pt;
+                    });
+                    
+                    currentTrackData = processedMsmPoints;
+                    
+                    renderTrackOnMap(processedMsmPoints, '#ef4444');
+                    buildElevationChart(processedMsmPoints, '#ef4444');
+                    
+                    const bounds = L.latLngBounds(processedMsmPoints.map(p => [p.lat, p.lon]));
+                    mapInstance.fitBounds(bounds, { padding: [50, 50] });
+                    
+                    document.getElementById('chart-stats').innerText = `Settore Monte Sante Marie: ${totalDist.toFixed(1)} Km | Pendenza Max: 20% | Offroad Tecnico`;
+                } else {
+                    // Fallback to zoom on coordinates if GPX is not loaded
+                    focusOnPoint([43.2341, 11.5739], 13);
+                }
+                
+                // Scroll smoothly to map container
+                const mapEl = document.getElementById('map');
+                if (mapEl) {
+                    smoothScrollTo(mapEl, 1200);
+                }
+            }
+        }
 
         // --- DEFAULT GPX LOADING & SPLITTING ---
         function loadDefaultGPX() {
@@ -1008,6 +1188,7 @@
             renderChecklist();
             selectDayRoute('sab');
             loadDefaultGPX();
+            loadMsmGPX();
             
             // Set today's date in input on load
             const todayStr = new Date().toISOString().split('T')[0];
@@ -1242,6 +1423,15 @@
         }
 
         function selectDayRoute(day) {
+            // Close Monte Sante Marie details if open when changing day
+            if (isShowingMsmDetails) {
+                const details = document.getElementById('msm-details');
+                if (details) details.classList.add('hidden');
+                const arrow = document.getElementById('msm-arrow');
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+                isShowingMsmDetails = false;
+            }
+
             activeRouteDay = day;
             
             // UI tab updates
