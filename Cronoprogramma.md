@@ -76,7 +76,7 @@ Pianificazione dettagliata per un weekend alla scoperta del percorso dell'Eroica
 | **09:15** | **Buonconvento** | `43.137508, 11.481829` | ⚠️ **Splendido borgo medievale. Deviazione obbligatoria per evitare sensi unici.** Segui il GPX aggiornato! Visita al centro storico. | 1h |
 | **10:15** | **San Giovanni d'Asso** | `43.1500, 11.5833`[reference:11] | Borgo medievale[reference:12] nel cuore delle Crete Senesi[reference:13]. Visita al Castello e alla famosa sagra del tartufo bianco. | 30 min |
 | **10:45** | **Asciano** | `43.2348, 11.5595`[reference:14] | Cittadina nel cuore delle Crete Senesi[reference:15]. Sosta nel centro storico. | 30 min |
-| **11:15** | **Monte Sante Marie** | `43.2341, 11.5739` | 🏆 **Il tratto sterrato più famoso, duro ed entusiasmante delle Crete Senesi.** Sosta per foto e adrenalina. | 45 min |
+| **11:15** | **Monte Sante Marie** | `43.2842, 11.5487` | 🏆 **Il tratto sterrato più famoso, duro ed entusiasmante delle Crete Senesi.** Sosta per foto e adrenalina. | 45 min |
 | **12:00** | **Guida verso Radda in Chianti** | - | Panorami mozzafiato | 1h |
 
 ### 🕛 Pranzo (13:00 – 14:30)

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="it" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eroica in Moto - Roadbook & Companion</title>
-    
+
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#d97736">
@@ -37,7 +38,7 @@
     </script>
 
     <!-- Leaflet CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!-- Chart.js for Elevation Profile -->
@@ -45,11 +46,13 @@
 
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
 
     <style>
         body {
@@ -57,29 +60,40 @@
             background-color: #1a1614;
             color: #f7f4f2;
         }
-        h1, h2, h3, h4, .font-title {
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .font-title {
             font-family: 'Space Grotesk', sans-serif;
         }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
             background: #1a1614;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #d97736;
             border-radius: 4px;
         }
+
         .leaflet-popup-content-wrapper {
             background: #2e2a27 !important;
             color: #f7f4f2 !important;
             border-radius: 12px;
             border: 1px solid #d97736;
         }
+
         .leaflet-popup-tip {
             background: #d97736 !important;
         }
+
         .leaflet-tooltip {
             background: #2e2a27 !important;
             color: #f7f4f2 !important;
@@ -87,52 +101,63 @@
             border-radius: 12px;
             padding: 10px 14px;
             font-size: 11px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
             white-space: normal !important;
             width: 280px;
         }
+
         .leaflet-tooltip-top:before {
             border-top-color: #d97736 !important;
         }
+
         .leaflet-tooltip-bottom:before {
             border-bottom-color: #d97736 !important;
         }
+
         .leaflet-tooltip-left:before {
             border-left-color: #d97736 !important;
         }
+
         .leaflet-tooltip-right:before {
             border-right-color: #d97736 !important;
         }
+
         .custom-div-icon {
             background: none !important;
             border: none !important;
         }
+
         /* Glassmorphism utility */
         .glass-card {
             background: rgba(46, 42, 39, 0.45);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
         .glass-card-hover:hover {
             border: 1px solid rgba(217, 119, 54, 0.3);
             box-shadow: 0 10px 30px -10px rgba(217, 119, 54, 0.15);
         }
+
         /* Pulsing Marker Animation */
         @keyframes map-pulse-animation {
             0% {
                 transform: scale(0.2);
                 opacity: 1;
             }
+
             100% {
                 transform: scale(3.5);
                 opacity: 0;
             }
         }
+
         .map-pulse-container {
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         .custom-map-pulse-marker {
             width: 16px;
             height: 16px;
@@ -141,6 +166,7 @@
             position: relative;
             box-shadow: 0 0 10px rgba(217, 119, 54, 0.9);
         }
+
         .custom-map-pulse-marker::after {
             content: '';
             position: absolute;
@@ -150,24 +176,31 @@
             bottom: 0;
             border: 3px solid #d97736;
             border-radius: 50%;
-            animation: map-pulse-animation 0.8s ease-out 4; /* exactly 4 pulses */
+            animation: map-pulse-animation 0.8s ease-out 4;
+            /* exactly 4 pulses */
             opacity: 0;
         }
+
         @keyframes pulse-subtle {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: scale(1);
                 box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5);
             }
+
             50% {
                 transform: scale(1.04);
                 box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
             }
         }
+
         .animate-pulse-subtle {
             animation: pulse-subtle 2s infinite ease-in-out;
         }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col selection:bg-tuscany-500 selection:text-white pb-6">
 
     <!-- Header Section -->
@@ -175,14 +208,17 @@
         <!-- Background decorative elements -->
         <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-tuscany-600/10 rounded-full blur-[100px] -z-10"></div>
         <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-amber-600/5 rounded-full blur-[80px] -z-10"></div>
-        
-        <div class="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+
+        <div
+            class="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div>
                 <div class="flex items-center gap-3 mb-2">
-                    <span class="inline-block bg-tuscany-600/20 text-tuscany-500 border border-tuscany-500/30 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                    <span
+                        class="inline-block bg-tuscany-600/20 text-tuscany-500 border border-tuscany-500/30 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                         <i class="fa-solid fa-motorcycle mr-1 animate-pulse"></i> Weekend di Polvere e Passione v2
                     </span>
-                    <span id="connection-badge" class="inline-flex items-center gap-1.5 bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                    <span id="connection-badge"
+                        class="inline-flex items-center gap-1.5 bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                         <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> Online
                     </span>
                 </div>
@@ -190,10 +226,12 @@
                     L'Eroica in Moto
                 </h1>
                 <p class="text-gray-400 text-sm max-w-xl">
-                    Da <span class="text-white font-semibold">Santa Croce sull'Arno</span> attraverso il Chianti e la Val d'Orcia. Un'avventura leggendaria di <span class="text-tuscany-500 font-semibold">3 Fratelli</span>.
+                    Da <span class="text-white font-semibold">Santa Croce sull'Arno</span> attraverso il Chianti e la
+                    Val d'Orcia. Un'avventura leggendaria di <span class="text-tuscany-500 font-semibold">3
+                        Fratelli</span>.
                 </p>
             </div>
-            
+
             <!-- Overall Info Box -->
             <div class="flex flex-wrap gap-4 w-full md:w-auto">
                 <div class="flex-1 min-w-[100px] text-center p-3 rounded-2xl glass-card">
@@ -201,7 +239,8 @@
                     <span class="text-[10px] text-gray-400 uppercase tracking-wider">Km Totali</span>
                 </div>
                 <div class="flex-1 min-w-[100px] text-center p-3 rounded-2xl glass-card">
-                    <span id="offroad-ratio-badge" class="block text-2xl font-bold text-tuscany-500 font-title">50%</span>
+                    <span id="offroad-ratio-badge"
+                        class="block text-2xl font-bold text-tuscany-500 font-title">50%</span>
                     <span class="text-[10px] text-gray-400 uppercase tracking-wider">Sterrato</span>
                 </div>
                 <div class="flex-1 min-w-[100px] text-center p-3 rounded-2xl glass-card">
@@ -214,64 +253,76 @@
 
     <!-- Main Grid Content -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
+
         <!-- Left Side: Map, Chart & Timeline (8 Columns) -->
         <div class="lg:col-span-8 space-y-8">
-            
+
             <!-- Map & Elevation Control Panel -->
             <div class="glass-card rounded-3xl overflow-hidden shadow-2xl relative">
-                
+
                 <!-- Upper Bar with Controls -->
                 <div class="p-4 flex flex-wrap justify-between items-center gap-4 bg-white/5 border-b border-white/5">
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
                             <i class="fa-solid fa-map-location-dot text-tuscany-500"></i>
                         </div>
                         <div>
                             <h2 class="text-sm font-bold text-white leading-none">Mappa e Profilo GPX</h2>
-                            <p class="text-[10px] text-gray-400 mt-1">Carica file GPX o seleziona una giornata di default</p>
+                            <p class="text-[10px] text-gray-400 mt-1">Carica file GPX o seleziona una giornata di
+                                default</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-center gap-2">
                         <!-- Default Route Selector -->
                         <div class="inline-flex p-0.5 bg-[#120f0e] rounded-xl border border-white/5 mr-2">
-                            <button onclick="selectDayRoute('all')" id="route-tab-all" class="px-3 py-1 rounded-lg text-[11px] font-bold transition text-gray-400 hover:text-white">All</button>
-                            <button onclick="selectDayRoute('sab')" id="route-tab-sab" class="px-3 py-1 rounded-lg text-[11px] font-bold transition bg-tuscany-500 text-white">Sabato</button>
-                            <button onclick="selectDayRoute('dom')" id="route-tab-dom" class="px-3 py-1 rounded-lg text-[11px] font-bold transition text-gray-400 hover:text-white">Domenica</button>
+                            <button onclick="selectDayRoute('all')" id="route-tab-all"
+                                class="px-3 py-1 rounded-lg text-[11px] font-bold transition text-gray-400 hover:text-white">All</button>
+                            <button onclick="selectDayRoute('sab')" id="route-tab-sab"
+                                class="px-3 py-1 rounded-lg text-[11px] font-bold transition bg-tuscany-500 text-white">Sabato</button>
+                            <button onclick="selectDayRoute('dom')" id="route-tab-dom"
+                                class="px-3 py-1 rounded-lg text-[11px] font-bold transition text-gray-400 hover:text-white">Domenica</button>
                         </div>
 
                         <!-- Fuel Station Toggle Button -->
-                        <button onclick="toggleFuelStations()" id="btn-toggle-fuel" class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold transition-all border border-white/5 bg-[#120f0e] text-gray-400 hover:text-white flex items-center gap-1 mr-2">
+                        <button onclick="toggleFuelStations()" id="btn-toggle-fuel"
+                            class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold transition-all border border-white/5 bg-[#120f0e] text-gray-400 hover:text-white flex items-center gap-1 mr-2">
                             <i class="fa-solid fa-gas-pump text-[10px]"></i>
                             <span>Benzinai</span>
                         </button>
 
                         <!-- Monte Sante Marie Toggle Button -->
-                        <button onclick="toggleMsmOverlay()" id="btn-toggle-msm" class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold transition-all border border-white/5 bg-[#120f0e] text-gray-400 hover:text-white flex items-center gap-1 mr-2">
+                        <button onclick="toggleMsmOverlay()" id="btn-toggle-msm"
+                            class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold transition-all border border-white/5 bg-[#120f0e] text-gray-400 hover:text-white flex items-center gap-1 mr-2">
                             <i class="fa-solid fa-route text-[10px]"></i>
                             <span>Tracciato MSM</span>
                         </button>
 
                         <!-- Map Layer Selector -->
                         <div class="flex items-center gap-1 bg-[#120f0e] p-0.5 rounded-xl border border-white/5">
-                            <button onclick="changeMapLayer('voyager')" id="btn-layer-voyager" class="px-2.5 py-1 text-[10px] font-bold text-white bg-tuscany-600 rounded-lg transition-all">Mappa</button>
-                            <button onclick="changeMapLayer('satellite')" id="btn-layer-satellite" class="px-2.5 py-1 text-[10px] font-bold text-gray-400 hover:text-white transition-all">Sat</button>
-                            <button onclick="changeMapLayer('topo')" id="btn-layer-topo" class="px-2.5 py-1 text-[10px] font-bold text-gray-400 hover:text-white transition-all">Topo</button>
+                            <button onclick="changeMapLayer('voyager')" id="btn-layer-voyager"
+                                class="px-2.5 py-1 text-[10px] font-bold text-white bg-tuscany-600 rounded-lg transition-all">Mappa</button>
+                            <button onclick="changeMapLayer('satellite')" id="btn-layer-satellite"
+                                class="px-2.5 py-1 text-[10px] font-bold text-gray-400 hover:text-white transition-all">Sat</button>
+                            <button onclick="changeMapLayer('topo')" id="btn-layer-topo"
+                                class="px-2.5 py-1 text-[10px] font-bold text-gray-400 hover:text-white transition-all">Topo</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Leaflet Map Canvas -->
                 <div id="map" class="h-[800px] w-full relative z-10"></div>
-                
+
                 <!-- GPX Uploader Dropzone / Input -->
-                <div class="px-6 py-3 bg-[#231f1d] border-t border-b border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div
+                    class="px-6 py-3 bg-[#231f1d] border-t border-b border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
                     <span class="text-xs text-gray-400 flex items-center gap-2">
                         <i class="fa-solid fa-file-import text-tuscany-500 animate-bounce"></i>
                         <span>Vuoi caricare un percorso personalizzato? trascina un file GPX qui o</span>
                     </span>
-                    <label class="cursor-pointer bg-white/5 hover:bg-white/10 border border-white/10 hover:border-tuscany-500 text-white text-xs px-4 py-1.5 rounded-xl font-semibold transition-all">
+                    <label
+                        class="cursor-pointer bg-white/5 hover:bg-white/10 border border-white/10 hover:border-tuscany-500 text-white text-xs px-4 py-1.5 rounded-xl font-semibold transition-all">
                         Sfoglia file GPX
                         <input type="file" id="gpx-input" accept=".gpx" class="hidden" onchange="loadCustomGPX(event)">
                     </label>
@@ -297,7 +348,8 @@
             <div class="glass-card rounded-3xl p-6 shadow-2xl">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
                             <i class="fa-solid fa-clock-rotate-left text-tuscany-500"></i>
                         </div>
                         <div>
@@ -305,182 +357,261 @@
                             <p class="text-xs text-gray-400">Tappe, soste cibo e pernotto dei 3 fratelli</p>
                         </div>
                     </div>
-                    
+
                     <div class="inline-flex p-0.5 bg-[#120f0e] rounded-xl border border-white/5">
-                        <button onclick="filterTimeline('all')" id="timeline-tab-all" class="px-3.5 py-1 rounded-lg text-xs font-semibold bg-tuscany-500 text-white transition">Tutti</button>
-                        <button onclick="filterTimeline('sab')" id="timeline-tab-sab" class="px-3.5 py-1 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition">Sabato</button>
-                        <button onclick="filterTimeline('dom')" id="timeline-tab-dom" class="px-3.5 py-1 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition">Domenica</button>
+                        <button onclick="filterTimeline('all')" id="timeline-tab-all"
+                            class="px-3.5 py-1 rounded-lg text-xs font-semibold bg-tuscany-500 text-white transition">Tutti</button>
+                        <button onclick="filterTimeline('sab')" id="timeline-tab-sab"
+                            class="px-3.5 py-1 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition">Sabato</button>
+                        <button onclick="filterTimeline('dom')" id="timeline-tab-dom"
+                            class="px-3.5 py-1 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition">Domenica</button>
                     </div>
                 </div>
 
                 <!-- Timeline Elements -->
-                <div class="space-y-6 relative before:absolute before:inset-y-1 before:left-4 md:before:left-6 before:w-[2px] before:bg-white/5">
-                    
+                <div
+                    class="space-y-6 relative before:absolute before:inset-y-1 before:left-4 md:before:left-6 before:w-[2px] before:bg-white/5">
+
                     <!-- Timeline Day 1 Sabato Items -->
-                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.7224, 10.7744], 12)" class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.7224, 10.7744], 12)"
+                            class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-play text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO · 08:30 (Ritrovo)</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.7224, 10.7744], 12)">Partenza da Santa Croce sull'Arno</h3>
-                                <p class="text-gray-400 text-xs mt-1">Ritrovo iniziale dei tre fratelli. Pieno di carburante e riscaldamento motori prima della guida verso il Chianti.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO
+                                    · 08:30 (Ritrovo)</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.7224, 10.7744], 12)">Partenza da Santa Croce sull'Arno
+                                </h3>
+                                <p class="text-gray-400 text-xs mt-1">Ritrovo iniziale dei tre fratelli. Pieno di
+                                    carburante e riscaldamento motori prima della guida verso il Chianti.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.7224,10.7744" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.7224,10.7744" target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.466970, 11.433860], 13)" class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.466970, 11.433860], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-flag text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO · 10:00</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.466970, 11.433860], 13)">Gaiole in Chianti</h3>
-                                <p class="text-gray-400 text-xs mt-1">Il cuore pulsante dell'Eroica. Sosta foto davanti alla scultura del Gallo Nero e visita al borgo prima dello sterrato.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO
+                                    · 10:00</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.466970, 11.433860], 13)">Gaiole in Chianti</h3>
+                                <p class="text-gray-400 text-xs mt-1">Il cuore pulsante dell'Eroica. Sosta foto davanti
+                                    alla scultura del Gallo Nero e visita al borgo prima dello sterrato.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.466970,11.433860" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.466970,11.433860"
+                                target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.413448, 11.463600], 14)" class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.413448, 11.463600], 14)"
+                            class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-camera text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO · 10:45</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.413448, 11.463600], 14)">Castello di Brolio</h3>
-                                <p class="text-gray-400 text-xs mt-1">Castello del XII secolo. Bellissima salita sterrata tra i cipressi con splendida vista panoramica sulla vallata.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO
+                                    · 10:45</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.413448, 11.463600], 14)">Castello di Brolio</h3>
+                                <p class="text-gray-400 text-xs mt-1">Castello del XII secolo. Bellissima salita
+                                    sterrata tra i cipressi con splendida vista panoramica sulla vallata.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.413448,11.463600" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.413448,11.463600"
+                                target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.3538, 11.4155], 13)" class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.3538, 11.4155], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-location-dot text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO · 11:45</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.3538, 11.4155], 13)">Pianella</h3>
-                                <p class="text-gray-400 text-xs mt-1">Piccola frazione nel territorio di Castelnuovo Berardenga. Breve sosta panoramica.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO
+                                    · 11:45</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.3538, 11.4155], 13)">Pianella</h3>
+                                <p class="text-gray-400 text-xs mt-1">Piccola frazione nel territorio di Castelnuovo
+                                    Berardenga. Breve sosta panoramica.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.3538,11.4155" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.3538,11.4155" target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.2147, 11.3789], 14)" class="absolute left-1 md:left-3 top-1 bg-tuscany-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.2147, 11.3789], 14)"
+                            class="absolute left-1 md:left-3 top-1 bg-tuscany-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-utensils text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-tuscany-500 bg-tuscany-500/10 px-2 py-0.5 rounded-full border border-tuscany-500/20">SABATO · 12:45 (Pranzo)</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.2147, 11.3789], 14)">Pranzo a Radi</h3>
-                                <p class="text-gray-400 text-xs mt-1">Pausa ristoro all'alimentari storico con salumi locali per un panino toscano veloce, tipico e genuino.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-tuscany-500 bg-tuscany-500/10 px-2 py-0.5 rounded-full border border-tuscany-500/20">SABATO
+                                    · 12:45 (Pranzo)</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.2147, 11.3789], 14)">Pranzo a Radi</h3>
+                                <p class="text-gray-400 text-xs mt-1">Pausa ristoro all'alimentari storico con salumi
+                                    locali per un panino toscano veloce, tipico e genuino.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.2147,11.3789" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.2147,11.3789" target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.1607, 11.3880], 13)" class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.1607, 11.3880], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-camera text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO · 14:00</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.1607, 11.3880], 13)">Murlo (territorio comunale)</h3>
-                                <p class="text-gray-400 text-xs mt-1">Affascinante comune con bellissime strade bianche e paesaggi delle Crete. Sosta fotografica.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO
+                                    · 14:00</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.1607, 11.3880], 13)">Murlo (territorio comunale)</h3>
+                                <p class="text-gray-400 text-xs mt-1">Affascinante comune con bellissime strade bianche
+                                    e paesaggi delle Crete. Sosta fotografica.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.1607,11.3880" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.1607,11.3880" target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.1239, 11.4486], 13)" class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.1239, 11.4486], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-location-dot text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO · 14:20</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.1239, 11.4486], 13)">Bibbiano</h3>
-                                <p class="text-gray-400 text-xs mt-1">Località tra Murlo e Montalcino. Zona collinare suggestiva con vista sulla valle dell'Ombrone.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO
+                                    · 14:20</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.1239, 11.4486], 13)">Bibbiano</h3>
+                                <p class="text-gray-400 text-xs mt-1">Località tra Murlo e Montalcino. Zona collinare
+                                    suggestiva con vista sulla valle dell'Ombrone.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.1239,11.4486" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.1239,11.4486" target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.1237, 11.5917], 13)" class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.1237, 11.5917], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-location-dot text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO · 14:35</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.1237, 11.5917], 13)">Lucignano d'Asso</h3>
-                                <p class="text-gray-400 text-xs mt-1">Piccolo borgo medievale. Sosta per foto e panorami.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO
+                                    · 14:35</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.1237, 11.5917], 13)">Lucignano d'Asso</h3>
+                                <p class="text-gray-400 text-xs mt-1">Piccolo borgo medievale. Sosta per foto e
+                                    panorami.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.1237,11.5917" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.1237,11.5917" target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.0875, 11.5482], 13)" class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.0875, 11.5482], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-location-dot text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO · 14:55</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.0875, 11.5482], 13)">Torrenieri</h3>
-                                <p class="text-gray-400 text-xs mt-1">Frazione di Montalcino, famosa per i vigneti di Brunello. Sosta tra i filari.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">SABATO
+                                    · 14:55</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.0875, 11.5482], 13)">Torrenieri</h3>
+                                <p class="text-gray-400 text-xs mt-1">Frazione di Montalcino, famosa per i vigneti di
+                                    Brunello. Sosta tra i filari.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.0875,11.5482" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.0875,11.5482" target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.055043, 11.489142], 13)" class="absolute left-1 md:left-3 top-1 bg-purple-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-sab relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.055043, 11.489142], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-purple-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-bed text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">SABATO · 15:10 (Notte)</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.055043, 11.489142], 13)">Arrivo a Montalcino</h3>
-                                <p class="text-gray-400 text-xs mt-1">Famoso per il Brunello. Strade bianche con pendenze >15% ed enogastronomia toscana di altissimo livello. Sistemazione e doccia in hotel.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">SABATO
+                                    · 15:10 (Notte)</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.055043, 11.489142], 13)">Arrivo a Montalcino</h3>
+                                <p class="text-gray-400 text-xs mt-1">Famoso per il Brunello. Strade bianche con
+                                    pendenze >15% ed enogastronomia toscana di altissimo livello. Sistemazione e doccia
+                                    in hotel.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.055043,11.489142" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.055043,11.489142"
+                                target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
@@ -488,112 +619,156 @@
                     </div>
 
                     <!-- Timeline Day 2 Domenica Items -->
-                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.055043, 11.489142], 13)" class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.055043, 11.489142], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-play text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA · 09:00</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.055043, 11.489142], 13)">Partenza da Montalcino</h3>
-                                <p class="text-gray-400 text-xs mt-1">Check-out dall'hotel, controllo bagagli e riscaldamento motori in direzione nord verso Gaiole.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA
+                                    · 09:00</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.055043, 11.489142], 13)">Partenza da Montalcino</h3>
+                                <p class="text-gray-400 text-xs mt-1">Check-out dall'hotel, controllo bagagli e
+                                    riscaldamento motori in direzione nord verso Gaiole.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.055043,11.489142" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.055043,11.489142"
+                                target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.137508, 11.481829], 14)" class="absolute left-1 md:left-3 top-1 bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.137508, 11.481829], 14)"
+                            class="absolute left-1 md:left-3 top-1 bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-triangle-exclamation text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-red-400 bg-red-500/10 px-2 py-0.5 rounded-full border border-red-500/20">DOMENICA · 09:15</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.137508, 11.481829], 14)">Deviazione Buonconvento</h3>
-                                <p class="text-gray-400 text-xs mt-1">⚠️ Splendido borgo medievale. Deviazione obbligatoria per evitare sensi unici e strade chiuse. Seguire il GPX aggiornato.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-red-400 bg-red-500/10 px-2 py-0.5 rounded-full border border-red-500/20">DOMENICA
+                                    · 09:15</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.137508, 11.481829], 14)">Deviazione Buonconvento</h3>
+                                <p class="text-gray-400 text-xs mt-1">⚠️ Splendido borgo medievale. Deviazione
+                                    obbligatoria per evitare sensi unici e strade chiuse. Seguire il GPX aggiornato.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.137508,11.481829" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.137508,11.481829"
+                                target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-xl text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.1500, 11.5833], 13)" class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.1500, 11.5833], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-location-dot text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA · 10:15</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.1500, 11.5833], 13)">San Giovanni d'Asso</h3>
-                                <p class="text-gray-400 text-xs mt-1">Borgo medievale nel cuore delle Crete Senesi. Visita al Castello e alla famosa sagra del tartufo bianco.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA
+                                    · 10:15</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.1500, 11.5833], 13)">San Giovanni d'Asso</h3>
+                                <p class="text-gray-400 text-xs mt-1">Borgo medievale nel cuore delle Crete Senesi.
+                                    Visita al Castello e alla famosa sagra del tartufo bianco.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.1500,11.5833" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.1500,11.5833" target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.2348, 11.5595], 13)" class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.2348, 11.5595], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-location-dot text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA · 10:45</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.2348, 11.5595], 13)">Asciano</h3>
-                                <p class="text-gray-400 text-xs mt-1">Cittadina nel cuore delle Crete Senesi. Sosta nel centro storico.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA
+                                    · 10:45</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.2348, 11.5595], 13)">Asciano</h3>
+                                <p class="text-gray-400 text-xs mt-1">Cittadina nel cuore delle Crete Senesi. Sosta nel
+                                    centro storico.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.2348,11.5595" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.2348,11.5595" target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.2341, 11.5739], 13)" class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.2842, 11.5487], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-trophy text-[10px]"></i>
                         </div>
                         <div class="flex flex-col w-full">
                             <div class="flex items-start justify-between gap-4">
                                 <div>
-                                    <span class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA · 11:15</span>
-                                    <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.2341, 11.5739], 13)">Monte Sante Marie</h3>
-                                    <p class="text-gray-400 text-xs mt-1">Il leggendario e tecnico tratto sterrato delle Crete Senesi. Guida in piedi sulle pedane per divertimento e adrenalina.</p>
+                                    <span
+                                        class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA
+                                        · 11:15</span>
+                                    <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                        onclick="focusOnPoint([43.2842, 11.5487], 13)">Monte Sante Marie</h3>
+                                    <p class="text-gray-400 text-xs mt-1">Il leggendario e tecnico tratto sterrato delle
+                                        Crete Senesi. Guida in piedi sulle pedane per divertimento e adrenalina.</p>
                                 </div>
-                                <a href="https://www.google.com/maps/dir/?api=1&destination=43.2341,11.5739" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
+                                <a href="https://www.google.com/maps/dir/?api=1&destination=43.2842,11.5487"
+                                    target="_blank"
+                                    class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
                                     <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                     <span>NAVIGA</span>
                                 </a>
                             </div>
-                            
+
                             <!-- Accordion Toggle Button -->
                             <div class="mt-3">
-                                <button onclick="toggleMsmDetails()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-400 hover:bg-amber-500 text-black border border-amber-300 rounded-xl text-[10px] font-extrabold transition-all cursor-pointer shadow-md shadow-amber-400/10 hover:scale-105 animate-pulse-subtle">
+                                <button onclick="toggleMsmDetails()"
+                                    class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-400 hover:bg-amber-500 text-black border border-amber-300 rounded-xl text-[10px] font-extrabold transition-all cursor-pointer shadow-md shadow-amber-400/10 hover:scale-105 animate-pulse-subtle">
                                     <i class="fa-solid fa-circle-info"></i>
                                     <span>DETTAGLI PERCORSO</span>
-                                    <i id="msm-arrow" class="fa-solid fa-chevron-down text-[8px] transition-transform duration-200"></i>
+                                    <i id="msm-arrow"
+                                        class="fa-solid fa-chevron-down text-[8px] transition-transform duration-200"></i>
                                 </button>
                             </div>
 
                             <!-- Accordion Content -->
-                            <div id="msm-details" class="hidden mt-4 bg-[#1a1614]/80 border border-white/5 rounded-2xl p-4 overflow-hidden transition-all duration-300">
+                            <div id="msm-details"
+                                class="hidden mt-4 bg-[#1a1614]/80 border border-white/5 rounded-2xl p-4 overflow-hidden transition-all duration-300">
                                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                                     <!-- Left side: Map Image -->
                                     <div class="md:col-span-4 flex flex-col justify-start">
-                                        <div class="rounded-xl overflow-hidden border border-white/10 shadow-lg relative group">
-                                            <img src="monte-sante-marie.png" alt="Mappa Monte Sante Marie" class="w-full h-auto object-cover hover:scale-105 transition-all duration-500" />
-                                            <div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg p-1.5 text-[9px] text-gray-300 text-center">
+                                        <div
+                                            class="rounded-xl overflow-hidden border border-white/10 shadow-lg relative group">
+                                            <img src="monte-sante-marie.png" alt="Mappa Monte Sante Marie"
+                                                class="w-full h-auto object-cover hover:scale-105 transition-all duration-500" />
+                                            <div
+                                                class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg p-1.5 text-[9px] text-gray-300 text-center">
                                                 Visualizzazione Tratto Sterrato
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Quick Info Box -->
                                         <div class="mt-3 bg-[#241e1c] rounded-xl p-3 border border-white/5 space-y-1.5">
                                             <div class="flex justify-between text-[10px]">
@@ -614,40 +789,62 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Right side: Description -->
                                     <div class="md:col-span-8 space-y-4">
                                         <div>
-                                            <h4 class="text-xs font-bold text-tuscany-400 uppercase tracking-wider mb-2">I 4 Settori del Tracciato</h4>
+                                            <h4
+                                                class="text-xs font-bold text-tuscany-400 uppercase tracking-wider mb-2">
+                                                I 4 Settori del Tracciato</h4>
                                             <div class="space-y-2">
                                                 <div class="bg-white/5 p-2.5 rounded-lg border border-white/5">
-                                                    <span class="text-[9px] font-bold text-blue-400 uppercase block">Settore 1 · Partenza da Asciano (~2 km)</span>
-                                                    <p class="text-[10px] text-gray-300 mt-1">Si lascia l'abitato di Asciano su strada bianca ondulata (pendenza fino al 12%). Fondo sassoso.</p>
+                                                    <span
+                                                        class="text-[9px] font-bold text-blue-400 uppercase block">Settore
+                                                        1 · Partenza da Asciano (~2 km)</span>
+                                                    <p class="text-[10px] text-gray-300 mt-1">Si lascia l'abitato di
+                                                        Asciano su strada bianca ondulata (pendenza fino al 12%). Fondo
+                                                        sassoso.</p>
                                                 </div>
                                                 <div class="bg-red-500/10 p-2.5 rounded-lg border border-red-500/20">
-                                                    <span class="text-[9px] font-bold text-red-400 uppercase block">Settore 2 · La Salita di Cancellara (~1,5 km)</span>
-                                                    <p class="text-[10px] text-gray-300 mt-1"><strong>Pendenze fino al 20%</strong> su fondo sconnesso. Include il cippo dedicato a Fabian Cancellara (Spartacus). Il tratto più impegnativo dell'Eroica.</p>
+                                                    <span
+                                                        class="text-[9px] font-bold text-red-400 uppercase block">Settore
+                                                        2 · La Salita di Cancellara (~1,5 km)</span>
+                                                    <p class="text-[10px] text-gray-300 mt-1"><strong>Pendenze fino al
+                                                            20%</strong> su fondo sconnesso. Include il cippo dedicato a
+                                                        Fabian Cancellara (Spartacus). Il tratto più impegnativo
+                                                        dell'Eroica.</p>
                                                 </div>
                                                 <div class="bg-white/5 p-2.5 rounded-lg border border-white/5">
-                                                    <span class="text-[9px] font-bold text-blue-400 uppercase block">Settore 3 · Discesa e Seconda Salita (~2 km)</span>
-                                                    <p class="text-[10px] text-gray-300 mt-1">Breve discesa seguita da una seconda salita con pendenze costanti intorno al 10%.</p>
+                                                    <span
+                                                        class="text-[9px] font-bold text-blue-400 uppercase block">Settore
+                                                        3 · Discesa e Seconda Salita (~2 km)</span>
+                                                    <p class="text-[10px] text-gray-300 mt-1">Breve discesa seguita da
+                                                        una seconda salita con pendenze costanti intorno al 10%.</p>
                                                 </div>
                                                 <div class="bg-white/5 p-2.5 rounded-lg border border-white/5">
-                                                    <span class="text-[9px] font-bold text-blue-400 uppercase block">Settore 4 · Cresta e Arrivo (~6 km)</span>
-                                                    <p class="text-[10px] text-gray-300 mt-1">Saliscendi in cresta e curve polverose con panorami spettacolari sulle Crete Senesi. Si conclude a Torre a Castello.</p>
+                                                    <span
+                                                        class="text-[9px] font-bold text-blue-400 uppercase block">Settore
+                                                        4 · Cresta e Arrivo (~6 km)</span>
+                                                    <p class="text-[10px] text-gray-300 mt-1">Saliscendi in cresta e
+                                                        curve polverose con panorami spettacolari sulle Crete Senesi. Si
+                                                        conclude a Torre a Castello.</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!-- Riding Tips Box -->
                                         <div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-3">
-                                            <h5 class="text-[10px] font-bold text-amber-500 uppercase tracking-wide flex items-center gap-1">
+                                            <h5
+                                                class="text-[10px] font-bold text-amber-500 uppercase tracking-wide flex items-center gap-1">
                                                 <i class="fa-solid fa-motorcycle"></i> Consigli di Guida in Moto
                                             </h5>
                                             <ul class="list-disc pl-4 text-[9px] text-gray-300 mt-1.5 space-y-1">
-                                                <li>Pneumatici tassellati o misti con pressione leggermente abbassata.</li>
-                                                <li>Guida in piedi sulle pedane per stabilità sui tratti sconnessi e pendenze.</li>
-                                                <li>Tieni il motore in coppia ed evita accelerate brusche per non perdere aderenza.</li>
+                                                <li>Pneumatici tassellati o misti con pressione leggermente abbassata.
+                                                </li>
+                                                <li>Guida in piedi sulle pedane per stabilità sui tratti sconnessi e
+                                                    pendenze.</li>
+                                                <li>Tieni il motore in coppia ed evita accelerate brusche per non
+                                                    perdere aderenza.</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -656,68 +853,99 @@
                         </div>
                     </div>
 
-                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.487332, 11.376469], 13)" class="absolute left-1 md:left-3 top-1 bg-tuscany-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.487332, 11.376469], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-tuscany-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-utensils text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-tuscany-500 bg-tuscany-500/10 px-2 py-0.5 rounded-full border border-tuscany-500/20">DOMENICA · 13:00 (Pranzo)</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.487332, 11.376469], 13)">Pranzo a Radda in Chianti</h3>
-                                <p class="text-gray-400 text-xs mt-1">Sosta ristoro nel borgo medievale. Pranzo tipico toscano (La Capannina o Agriturismo Il Pozzo) e visita al centro.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-tuscany-500 bg-tuscany-500/10 px-2 py-0.5 rounded-full border border-tuscany-500/20">DOMENICA
+                                    · 13:00 (Pranzo)</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.487332, 11.376469], 13)">Pranzo a Radda in Chianti</h3>
+                                <p class="text-gray-400 text-xs mt-1">Sosta ristoro nel borgo medievale. Pranzo tipico
+                                    toscano (La Capannina o Agriturismo Il Pozzo) e visita al centro.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.487332,11.376469" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.487332,11.376469"
+                                target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.3455, 11.5019], 13)" class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.3455, 11.5019], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-location-dot text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA · 14:30</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.3455, 11.5019], 13)">Castelnuovo Berardenga</h3>
-                                <p class="text-gray-400 text-xs mt-1">Comune medievale tra Asciano e Gaiole. Breve sosta panoramica.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA
+                                    · 14:30</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.3455, 11.5019], 13)">Castelnuovo Berardenga</h3>
+                                <p class="text-gray-400 text-xs mt-1">Comune medievale tra Asciano e Gaiole. Breve sosta
+                                    panoramica.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.3455,11.5019" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.3455,11.5019" target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.494765, 11.449528], 14)" class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.494765, 11.449528], 14)"
+                            class="absolute left-1 md:left-3 top-1 bg-amber-500 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-wine-glass text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA · 14:50</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.494765, 11.449528], 14)">Badia a Coltibuono</h3>
-                                <p class="text-gray-400 text-xs mt-1">Visita all'antica abbazia benedettina millenaria. Degustazione vini locali e sosta culturale prima del rientro.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">DOMENICA
+                                    · 14:50</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.494765, 11.449528], 14)">Badia a Coltibuono</h3>
+                                <p class="text-gray-400 text-xs mt-1">Visita all'antica abbazia benedettina millenaria.
+                                    Degustazione vini locali e sosta culturale prima del rientro.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.494765,11.449528" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.494765,11.449528"
+                                target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
                         </div>
                     </div>
 
-                    <div class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
-                        <div onclick="focusOnPoint([43.466970, 11.433860], 13)" class="absolute left-1 md:left-3 top-1 bg-green-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
+                    <div
+                        class="timeline-item day-dom relative pl-12 md:pl-16 group transition hover:translate-x-1 duration-200">
+                        <div onclick="focusOnPoint([43.466970, 11.433860], 13)"
+                            class="absolute left-1 md:left-3 top-1 bg-green-600 text-white w-7 h-7 rounded-full flex items-center justify-center border-4 border-background cursor-pointer hover:scale-110 transition z-10 shadow-lg">
                             <i class="fa-solid fa-flag-checkered text-[10px]"></i>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <span class="text-[10px] font-bold uppercase text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/20">DOMENICA · 16:50 (Arrivo)</span>
-                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer" onclick="focusOnPoint([43.466970, 11.433860], 13)">Rientro a Gaiole in Chianti</h3>
-                                <p class="text-gray-400 text-xs mt-1">Arrivo finale all'anello dell'Eroica classica. Foto di gruppo e saluti finali a partire dalle ore 17:00.</p>
+                                <span
+                                    class="text-[10px] font-bold uppercase text-green-400 bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/20">DOMENICA
+                                    · 16:50 (Arrivo)</span>
+                                <h3 class="text-md font-bold text-white mt-2 hover:text-tuscany-500 cursor-pointer"
+                                    onclick="focusOnPoint([43.466970, 11.433860], 13)">Rientro a Gaiole in Chianti</h3>
+                                <p class="text-gray-400 text-xs mt-1">Arrivo finale all'anello dell'Eroica classica.
+                                    Foto di gruppo e saluti finali a partire dalle ore 17:00.</p>
                             </div>
-                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.466970,11.433860" target="_blank" class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=43.466970,11.433860"
+                                target="_blank"
+                                class="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-tuscany-500/10 hover:bg-tuscany-500 text-tuscany-500 hover:text-white border border-tuscany-500/20 rounded-lg text-[9px] font-bold transition-all shadow-md mt-1">
                                 <i class="fa-solid fa-location-arrow text-[9px]"></i>
                                 <span>NAVIGA</span>
                             </a>
@@ -726,15 +954,16 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Right Side: Weather, Splitter & Packing List (4 Columns) -->
         <div class="lg:col-span-4 space-y-8">
-            
+
             <!-- Weather Center Card -->
             <div class="glass-card rounded-3xl p-6 shadow-2xl relative overflow-hidden">
                 <div class="flex items-center justify-between mb-3">
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
                             <i class="fa-solid fa-cloud-sun text-tuscany-500"></i>
                         </div>
                         <div>
@@ -742,15 +971,19 @@
                             <p class="text-[10px] text-gray-400">Previsioni e dati storici Open-Meteo</p>
                         </div>
                     </div>
-                    <button onclick="fetchWeatherData()" class="text-[10px] text-tuscany-500 hover:text-tuscany-600 transition flex items-center gap-1">
+                    <button onclick="fetchWeatherData()"
+                        class="text-[10px] text-tuscany-500 hover:text-tuscany-600 transition flex items-center gap-1">
                         <i class="fa-solid fa-arrows-rotate"></i>
                     </button>
                 </div>
 
                 <!-- Date Picker -->
-                <div class="mb-4 flex items-center justify-between gap-2 bg-[#120f0e]/50 p-2.5 rounded-xl border border-white/5">
-                    <label for="weather-date-input" class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Data Viaggio:</label>
-                    <input type="date" id="weather-date-input" onchange="handleWeatherDateChange(event)" class="bg-[#1a1614] border border-white/10 rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-tuscany-500 cursor-pointer">
+                <div
+                    class="mb-4 flex items-center justify-between gap-2 bg-[#120f0e]/50 p-2.5 rounded-xl border border-white/5">
+                    <label for="weather-date-input"
+                        class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Data Viaggio:</label>
+                    <input type="date" id="weather-date-input" onchange="handleWeatherDateChange(event)"
+                        class="bg-[#1a1614] border border-white/10 rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-tuscany-500 cursor-pointer">
                 </div>
 
                 <!-- Live Weather Locations -->
@@ -771,7 +1004,8 @@
             <div class="glass-card rounded-3xl p-6 shadow-2xl relative">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
                             <i class="fa-solid fa-camera text-tuscany-500"></i>
                         </div>
                         <div>
@@ -792,15 +1026,19 @@
                 <!-- Circular progress absolute top-6 right-6 -->
                 <div class="absolute top-6 right-6 flex items-center justify-center">
                     <svg class="w-12 h-12 transform -rotate-90">
-                        <circle cx="24" cy="24" r="18" stroke="rgba(255,255,255,0.05)" stroke-width="4.5" fill="transparent"/>
-                        <circle id="checklist-progress-circle" cx="24" cy="24" r="18" stroke="#d97736" stroke-width="4.5" fill="transparent"
-                                stroke-dasharray="113.1" stroke-dashoffset="113.1" class="transition-all duration-300"/>
+                        <circle cx="24" cy="24" r="18" stroke="rgba(255,255,255,0.05)" stroke-width="4.5"
+                            fill="transparent" />
+                        <circle id="checklist-progress-circle" cx="24" cy="24" r="18" stroke="#d97736"
+                            stroke-width="4.5" fill="transparent" stroke-dasharray="113.1" stroke-dashoffset="113.1"
+                            class="transition-all duration-300" />
                     </svg>
-                    <span id="checklist-progress-text" class="absolute text-[10px] font-black text-white font-title">0%</span>
+                    <span id="checklist-progress-text"
+                        class="absolute text-[10px] font-black text-white font-title">0%</span>
                 </div>
 
                 <div class="flex items-center gap-3 mb-6">
-                    <div class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
+                    <div
+                        class="w-8 h-8 rounded-lg bg-tuscany-500/10 flex items-center justify-center border border-tuscany-500/20">
                         <i class="fa-solid fa-clipboard-list text-tuscany-500"></i>
                     </div>
                     <div>
@@ -813,9 +1051,11 @@
                 <div class="space-y-3" id="checklist-container">
                     <!-- Categoria: Moto -->
                     <div class="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.02]">
-                        <button onclick="toggleAccordion('check-cat-moto')" class="w-full px-4 py-3 flex justify-between items-center text-xs font-bold text-white hover:bg-white/5 transition">
+                        <button onclick="toggleAccordion('check-cat-moto')"
+                            class="w-full px-4 py-3 flex justify-between items-center text-xs font-bold text-white hover:bg-white/5 transition">
                             <span>🔧 Moto e Ricambi</span>
-                            <i id="check-cat-moto-arrow" class="fa-solid fa-chevron-down text-gray-400 transition-transform"></i>
+                            <i id="check-cat-moto-arrow"
+                                class="fa-solid fa-chevron-down text-gray-400 transition-transform"></i>
                         </button>
                         <div id="check-cat-moto-body" class="px-4 pb-3 space-y-2 hidden">
                             <!-- Populated by JS -->
@@ -823,9 +1063,11 @@
                     </div>
                     <!-- Categoria: Abbigliamento -->
                     <div class="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.02]">
-                        <button onclick="toggleAccordion('check-cat-vest')" class="w-full px-4 py-3 flex justify-between items-center text-xs font-bold text-white hover:bg-white/5 transition">
+                        <button onclick="toggleAccordion('check-cat-vest')"
+                            class="w-full px-4 py-3 flex justify-between items-center text-xs font-bold text-white hover:bg-white/5 transition">
                             <span>🧥 Abbigliamento & Protezioni</span>
-                            <i id="check-cat-vest-arrow" class="fa-solid fa-chevron-down text-gray-400 transition-transform"></i>
+                            <i id="check-cat-vest-arrow"
+                                class="fa-solid fa-chevron-down text-gray-400 transition-transform"></i>
                         </button>
                         <div id="check-cat-vest-body" class="px-4 pb-3 space-y-2 hidden">
                             <!-- Populated by JS -->
@@ -833,9 +1075,11 @@
                     </div>
                     <!-- Categoria: Tecnologia -->
                     <div class="border border-white/5 rounded-2xl overflow-hidden bg-white/[0.02]">
-                        <button onclick="toggleAccordion('check-cat-tech')" class="w-full px-4 py-3 flex justify-between items-center text-xs font-bold text-white hover:bg-white/5 transition">
+                        <button onclick="toggleAccordion('check-cat-tech')"
+                            class="w-full px-4 py-3 flex justify-between items-center text-xs font-bold text-white hover:bg-white/5 transition">
                             <span>📱 Tech, Documenti & Idratazione</span>
-                            <i id="check-cat-tech-arrow" class="fa-solid fa-chevron-down text-gray-400 transition-transform"></i>
+                            <i id="check-cat-tech-arrow"
+                                class="fa-solid fa-chevron-down text-gray-400 transition-transform"></i>
                         </button>
                         <div id="check-cat-tech-body" class="px-4 pb-3 space-y-2 hidden">
                             <!-- Populated by JS -->
@@ -845,15 +1089,19 @@
 
                 <!-- Add custom checklist item -->
                 <div class="mt-4 p-3 bg-white/5 border border-white/5 rounded-2xl space-y-2">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Aggiungi oggetto personalizzato</span>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Aggiungi oggetto
+                        personalizzato</span>
                     <div class="flex gap-1.5">
-                        <input type="text" id="new-item-desc" placeholder="Nome oggetto..." class="flex-grow bg-[#120f0e] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-tuscany-500">
-                        <select id="new-item-cat" class="bg-[#120f0e] border border-white/10 rounded-xl px-2 py-1.5 text-xs text-white focus:outline-none focus:border-tuscany-500">
+                        <input type="text" id="new-item-desc" placeholder="Nome oggetto..."
+                            class="flex-grow bg-[#120f0e] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-tuscany-500">
+                        <select id="new-item-cat"
+                            class="bg-[#120f0e] border border-white/10 rounded-xl px-2 py-1.5 text-xs text-white focus:outline-none focus:border-tuscany-500">
                             <option value="moto">🔧 Moto</option>
                             <option value="vest">🧥 Vestiti</option>
                             <option value="tech">📱 Tech</option>
                         </select>
-                        <button onclick="addCustomChecklistItem()" class="bg-tuscany-500 hover:bg-tuscany-600 px-3 rounded-xl text-white text-xs font-bold transition">
+                        <button onclick="addCustomChecklistItem()"
+                            class="bg-tuscany-500 hover:bg-tuscany-600 px-3 rounded-xl text-white text-xs font-bold transition">
                             <i class="fa-solid fa-plus"></i>
                         </button>
                     </div>
@@ -861,22 +1109,26 @@
             </div>
 
             <!-- Professional Advices Box -->
-            <div class="bg-gradient-to-br from-tuscany-900/40 to-dust rounded-3xl border border-tuscany-500/20 p-6 shadow-2xl">
+            <div
+                class="bg-gradient-to-br from-tuscany-900/40 to-dust rounded-3xl border border-tuscany-500/20 p-6 shadow-2xl">
                 <h2 class="text-sm font-bold mb-3 flex items-center gap-2 text-white">
                     <i class="fa-solid fa-circle-exclamation text-tuscany-500"></i> Consigli del Pilota Locale:
                 </h2>
                 <ul class="space-y-3 text-xs text-gray-300">
                     <li class="flex gap-2">
                         <i class="fa-solid fa-shield-halved text-tuscany-500 mt-0.5"></i>
-                        <span><strong>Distanza e Polvere:</strong> La visibilità su strada bianca scende a zero. Mantieni una distanza di sicurezza di almeno 40 metri.</span>
+                        <span><strong>Distanza e Polvere:</strong> La visibilità su strada bianca scende a zero.
+                            Mantieni una distanza di sicurezza di almeno 40 metri.</span>
                     </li>
                     <li class="flex gap-2">
                         <i class="fa-solid fa-person-biking text-tuscany-500 mt-0.5"></i>
-                        <span><strong>Ciclisti in curva:</strong> L'Eroica è amata dai ciclisti. Fai molta attenzione nelle curve cieche e mantieni velocità moderate.</span>
+                        <span><strong>Ciclisti in curva:</strong> L'Eroica è amata dai ciclisti. Fai molta attenzione
+                            nelle curve cieche e mantieni velocità moderate.</span>
                     </li>
                     <li class="flex gap-2">
                         <i class="fa-solid fa-gas-pump text-tuscany-500 mt-0.5"></i>
-                        <span><strong>Rifornimento:</strong> Nelle zone delle Crete Senesi i distributori sono rari. Fai il pieno ad ogni sosta utile.</span>
+                        <span><strong>Rifornimento:</strong> Nelle zone delle Crete Senesi i distributori sono rari. Fai
+                            il pieno ad ogni sosta utile.</span>
                     </li>
                 </ul>
             </div>
@@ -886,11 +1138,13 @@
     <!-- Footer -->
     <footer class="mt-8 bg-background border-t border-white/5 py-6 text-center text-xs text-gray-500 px-4">
         <p>Eroica in Moto © 2026 · Redesigned in WebApp PWA.</p>
-        <p class="text-gray-600 mt-1">Sviluppato per 3 fratelli e compagni d'avventura. Rispetta la natura e guida con prudenza.</p>
+        <p class="text-gray-600 mt-1">Sviluppato per 3 fratelli e compagni d'avventura. Rispetta la natura e guida con
+            prudenza.</p>
     </footer>
 
     <!-- Weather Details Modal -->
-    <div id="weather-modal" class="fixed inset-0 z-[1000] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div id="weather-modal"
+        class="fixed inset-0 z-[1000] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
         <div class="bg-dust border border-white/10 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl">
             <div class="p-6 border-b border-white/5 flex justify-between items-center">
                 <h3 id="modal-city-name" class="text-lg font-bold text-white">Previsioni Meteo</h3>
@@ -929,7 +1183,7 @@
             dom: [
                 { lat: 43.0581, lon: 11.4891, ele: 564, name: "Montalcino" },
                 { lat: 43.1364, lon: 11.4822, ele: 147, name: "Buonconvento" },
-                { lat: 43.2341, lon: 11.5739, ele: 290, name: "Monte Sante Marie" },
+                { lat: 43.2842, lon: 11.5487, ele: 290, name: "Monte Sante Marie" },
                 { lat: 43.3468, lon: 11.5039, ele: 230 },
                 { lat: 43.3186, lon: 11.3306, ele: 210 },
                 { lat: 43.4700, lon: 11.1450, ele: 290 },
@@ -952,7 +1206,7 @@
             { name: "Buonconvento", coords: [43.137508, 11.481829], type: 'waypoint', desc: "Splendido borgo medievale. Deviazione obbligatoria per evitare sensi unici." },
             { name: "San Giovanni d'Asso", coords: [43.1500, 11.5833], type: 'waypoint', desc: "Borgo medievale nel cuore delle Crete Senesi. Visita al Castello e alla famosa sagra del tartufo bianco." },
             { name: "Asciano", coords: [43.2348, 11.5595], type: 'waypoint', desc: "Cittadina nel cuore delle Crete Senesi. Sosta nel centro storico." },
-            { name: "Monte Sante Marie", coords: [43.2341, 11.5739], type: 'warning', desc: "Il tratto sterrato più famoso, duro ed entusiasmante delle Crete Senesi." },
+            { name: "Monte Sante Marie", coords: [43.2842, 11.5487], type: 'warning', desc: "Il tratto sterrato più famoso, duro ed entusiasmante delle Crete Senesi." },
             { name: "Radda in Chianti", coords: [43.487332, 11.376469], type: 'waypoint', desc: "Borgo medievale del Chianti, ottimo per una sosta ristoro." },
             { name: "Castelnuovo Berardenga", coords: [43.3455, 11.5019], type: 'waypoint', desc: "Comune medievale tra Asciano e Gaiole. Breve sosta panoramica." },
             { name: "Badia a Coltibuono", coords: [43.494765, 11.449528], type: 'food', desc: "Antica abbazia benedettina millenaria. Oggi cantina vinicola e ristorante di livello." }
@@ -971,7 +1225,7 @@
         let isShowingMsmDetails = false;
         let showMsmOverlay = false;
         let msmOverlayPolyline = null;
-        
+
         // --- FUEL STATIONS DATA ---
         let showFuelStations = false;
         let fuelMarkers = [];
@@ -996,7 +1250,7 @@
                 popupAnchor: [0, -16]
             });
         }
-        
+
         let photoChecklist = [
             { id: "photo-brolio", label: "Castello di Brolio", desc: "La strada bianca tra i cipressi", checked: false },
             { id: "photo-montalcino", label: "Montalcino", desc: "Panorama sulla valle", checked: false },
@@ -1006,7 +1260,7 @@
             { id: "photo-radda", label: "Radda in Chianti", desc: "La piazza medievale", checked: false },
             { id: "photo-bigbench", label: "Big Bench #136", desc: "La panchina gigante con vista", checked: false }
         ];
-        
+
         let checklist = {
             moto: [
                 { id: 'm-1', desc: 'Kit Riparazione Tubeless (vermicelli, ago)', checked: false },
@@ -1041,7 +1295,7 @@
                     const parser = new DOMParser();
                     const xmlDoc = parser.parseFromString(gpxText, "text/xml");
                     const trkpts = xmlDoc.getElementsByTagName("trkpt");
-                    
+
                     if (trkpts.length === 0) return;
 
                     let gpxPoints = [];
@@ -1084,7 +1338,7 @@
                 details.classList.add('hidden');
                 if (arrow) arrow.style.transform = 'rotate(0deg)';
                 isShowingMsmDetails = false;
-                
+
                 // Restore active route
                 selectDayRoute(activeRouteDay);
             } else {
@@ -1092,29 +1346,29 @@
                 details.classList.remove('hidden');
                 if (arrow) arrow.style.transform = 'rotate(180deg)';
                 isShowingMsmDetails = true;
-                
+
                 // Draw Monte Sante Marie GPX if loaded
                 if (msmGpxPoints && msmGpxPoints.length > 0) {
                     let tempPoints = processCoordinatesToTrackData(msmGpxPoints);
                     const totalDist = tempPoints[tempPoints.length - 1].dist;
-                    
+
                     const processedMsmPoints = tempPoints.map(pt => {
                         pt.ele = parseFloat(estimateMsmElevation(pt.dist, totalDist).toFixed(1));
                         return pt;
                     });
-                    
+
                     currentTrackData = processedMsmPoints;
-                    
+
                     renderTrackOnMap(processedMsmPoints, '#ef4444');
                     buildElevationChart(processedMsmPoints, '#ef4444');
-                    
+
                     const bounds = L.latLngBounds(processedMsmPoints.map(p => [p.lat, p.lon]));
                     mapInstance.fitBounds(bounds, { padding: [50, 50] });
-                    
+
                     document.getElementById('chart-stats').innerText = `Settore Monte Sante Marie: ${totalDist.toFixed(1)} Km | Pendenza Max: 20% | Offroad Tecnico`;
                 } else {
                     // Fallback to zoom on coordinates if GPX is not loaded
-                    focusOnPoint([43.2341, 11.5739], 13);
+                    focusOnPoint([43.2842, 11.5487], 13);
                 }
             }
         }
@@ -1130,7 +1384,7 @@
                     const parser = new DOMParser();
                     const xmlDoc = parser.parseFromString(gpxText, "text/xml");
                     const trkpts = xmlDoc.getElementsByTagName("trkpt");
-                    
+
                     if (trkpts.length === 0) return;
 
                     let gpxPoints = [];
@@ -1182,7 +1436,7 @@
                         domGPX[0].name = "Montalcino";
                         domGPX[domGPX.length - 1].name = "Gaiole in Chianti";
                     }
-                    const returnConnection = connectionToGaiole.map(p => ({...p})).reverse();
+                    const returnConnection = connectionToGaiole.map(p => ({ ...p })).reverse();
                     returnConnection[returnConnection.length - 1].name = "Santa Croce (Fine)";
                     defaultTracks.dom = [...domGPX, ...returnConnection];
 
@@ -1204,7 +1458,7 @@
             selectDayRoute('sab');
             loadDefaultGPX();
             loadMsmGPX();
-            
+
             // Set today's date in input on load
             const todayStr = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('weather-date-input');
@@ -1260,7 +1514,7 @@
         function initMap() {
             // Leaflet center on central Tuscany
             mapInstance = L.map('map', { zoomControl: false }).setView([43.38, 11.30], 9);
-            
+
             // Add zoom control in top right
             L.control.zoom({ position: 'topright' }).addTo(mapInstance);
 
@@ -1287,7 +1541,7 @@
         function changeMapLayer(layerKey) {
             mapInstance.removeLayer(mapLayers[activeLayerKey]);
             mapLayers[layerKey].addTo(mapInstance);
-            
+
             // Update UI buttons
             ['voyager', 'satellite', 'topo'].forEach(key => {
                 const btn = document.getElementById(`btn-layer-${key}`);
@@ -1355,13 +1609,13 @@
         function focusOnPoint(coords, zoom = 14) {
             // Center the map on coordinates
             mapInstance.setView(coords, zoom);
-            
+
             // Scroll page smoothly to the map container with custom duration
             const mapEl = document.getElementById('map');
             if (mapEl) {
                 smoothScrollTo(mapEl, 1200);
             }
-            
+
             // Highlight step briefly by placing a temporary pulsing marker
             const pulseIcon = L.divIcon({
                 html: '<div class="custom-map-pulse-marker"></div>',
@@ -1369,7 +1623,7 @@
                 iconSize: [24, 24],
                 iconAnchor: [12, 12]
             });
-            
+
             const tempHighlight = L.marker(coords, { icon: pulseIcon }).addTo(mapInstance);
 
             // Remove marker after 4 pulses (0.8s * 4 = 3200ms)
@@ -1384,10 +1638,10 @@
             const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             return R * c;
         }
 
@@ -1448,7 +1702,7 @@
             }
 
             activeRouteDay = day;
-            
+
             // UI tab updates
             ['sab', 'dom', 'all'].forEach(key => {
                 const tab = document.getElementById(`route-tab-${key}`);
@@ -1484,7 +1738,7 @@
                 }
 
                 currentTrackData = [...sabPoints, ...domPoints];
-                
+
                 renderTracksOnMap([
                     { points: sabPoints, color: '#3b82f6' },
                     { points: domPoints, color: '#f59e0b' }
@@ -1496,11 +1750,11 @@
             } else {
                 const rawPoints = defaultTracks[day];
                 currentTrackData = processCoordinatesToTrackData(rawPoints);
-                
+
                 const color = day === 'sab' ? '#3b82f6' : '#f59e0b';
                 renderTrackOnMap(currentTrackData, color);
                 buildElevationChart(currentTrackData, color);
-                
+
                 const totalDistance = currentTrackData[currentTrackData.length - 1].dist;
                 document.getElementById('chart-stats').innerText = `Distanza tracciato: ${totalDistance} Km | Punti: ${currentTrackData.length}`;
             }
@@ -1512,7 +1766,7 @@
             if (!file) return;
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 const gpxText = e.target.result;
                 parseGPXText(gpxText);
             };
@@ -1553,10 +1807,10 @@
 
                 const totalDistance = currentTrackData[currentTrackData.length - 1].dist;
                 document.getElementById('chart-stats').innerText = `Tracciato personalizzato: ${totalDistance} Km | Punti: ${currentTrackData.length}`;
-                
+
                 // Update general metrics badge
                 document.getElementById('total-dist-badge').innerText = `~${Math.round(totalDistance)}`;
-                
+
                 // Parse optional waypoints in GPX
                 const wpts = xmlDoc.getElementsByTagName("wpt");
                 if (wpts.length > 0) {
@@ -1566,7 +1820,7 @@
                         const lon = parseFloat(wNode.getAttribute("lon"));
                         const nameNode = wNode.getElementsByTagName("name")[0];
                         const name = nameNode ? nameNode.textContent : "Punto GPX";
-                        
+
                         L.marker([lat, lon], {
                             icon: L.divIcon({
                                 html: `<div class="flex items-center justify-center w-6 h-6 rounded-full shadow-lg border border-white text-white bg-tuscany-500"><i class="fa-solid fa-map-pin text-[10px]"></i></div>`,
@@ -1587,7 +1841,7 @@
         // --- ELEVATION CHART (CHART.JS) ---
         function buildElevationChart(dataList, color = '#d97736') {
             const ctx = document.getElementById('elevation-chart').getContext('2d');
-            
+
             // X-axis: distances, Y-axis: elevations
             const labels = dataList.map(p => p.dist);
             const elevations = dataList.map(p => p.ele);
@@ -1682,7 +1936,7 @@
 
         function buildElevationChartAll(sabPoints, domPoints) {
             const ctx = document.getElementById('elevation-chart').getContext('2d');
-            
+
             const sabLabels = sabPoints.map(p => p.dist);
             const domLabels = domPoints.map(p => p.dist);
             const labels = [...sabLabels, ...domLabels];
@@ -1806,7 +2060,7 @@
                     weight: 3
                 }).addTo(mapInstance);
             }
-            
+
             // Pop an informative small popup dynamically (optional, deactivated for smoothness unless requested)
             // hoverMarker.bindTooltip(`Alt: ${ele}m`, { permanent: false }).openTooltip();
         }
@@ -1850,7 +2104,7 @@
             { name: "Santa Croce sull'Arno", lat: 43.7224, lon: 10.7744, key: 'sc' },
             { name: "Gaiole in Chianti", lat: 43.4658, lon: 11.4339, key: 'gc' },
             { name: "Montalcino", lat: 43.0581, lon: 11.4891, key: 'ml' },
-            { name: "Crete Senesi (Asciano)", lat: 43.2341, lon: 11.5739, key: 'cs' }
+            { name: "Crete Senesi (Asciano)", lat: 43.2348, lon: 11.5595, key: 'cs' }
         ];
 
         let fetchedWeatherDataRaw = null;
@@ -1882,7 +2136,7 @@
             }
 
             activeWeatherDate = selectedDateString;
-            
+
             // Set date input value just in case
             const input = document.getElementById('weather-date-input');
             if (input) {
@@ -1891,19 +2145,19 @@
 
             // Date math
             const today = new Date();
-            today.setHours(0,0,0,0);
-            
+            today.setHours(0, 0, 0, 0);
+
             const selected = new Date(selectedDateString);
-            selected.setHours(0,0,0,0);
-            
+            selected.setHours(0, 0, 0, 0);
+
             const diffTime = selected.getTime() - today.getTime();
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
             const lats = weatherCities.map(c => c.lat).join(',');
             const lons = weatherCities.map(c => c.lon).join(',');
-            
+
             let url = '';
-            
+
             if (diffDays === 0) {
                 // Today: Live Current Weather + 3-day forecast
                 weatherMode = 'live';
@@ -1928,11 +2182,11 @@
                 const lastYearDate = new Date(selected);
                 lastYearDate.setFullYear(lastYearDate.getFullYear() - 1);
                 const lyStartString = lastYearDate.toISOString().split('T')[0];
-                
+
                 const lastYearEndDate = new Date(lastYearDate);
                 lastYearEndDate.setDate(lastYearDate.getDate() + 2);
                 const lyEndString = lastYearEndDate.toISOString().split('T')[0];
-                
+
                 url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lats}&longitude=${lons}&start_date=${lyStartString}&end_date=${lyEndString}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Europe/Rome`;
             }
 
@@ -2030,16 +2284,16 @@
                 titleText = `Meteo Storico: ${city.name}`;
             }
             document.getElementById('modal-city-name').innerText = titleText;
-            
+
             const modalBody = document.getElementById('modal-forecast-body');
             modalBody.innerHTML = '';
 
             const daily = cData.daily;
-            
+
             for (let i = 0; i < 3; i++) {
                 if (!daily.time[i]) continue;
                 const dateRaw = new Date(daily.time[i]);
-                
+
                 let dayName = dateRaw.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'short' });
                 if (weatherMode === 'climate') {
                     const targetYear = new Date(activeWeatherDate);
@@ -2047,7 +2301,7 @@
                     const labelDay = targetYear.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'short' });
                     dayName = `${labelDay} (Storico ${dateRaw.getFullYear()})`;
                 }
-                
+
                 const weatherInfo = getWeatherIcon(daily.weather_code[i]);
                 const min = Math.round(daily.temperature_2m_min[i]);
                 const max = Math.round(daily.temperature_2m_max[i]);
@@ -2131,7 +2385,7 @@
         function addCustomChecklistItem() {
             const descInput = document.getElementById('new-item-desc');
             const catSelect = document.getElementById('new-item-cat');
-            
+
             const desc = descInput.value.trim();
             const cat = catSelect.value;
 
@@ -2145,9 +2399,9 @@
 
             checklist[cat].push(newItem);
             saveState('eroica_checklist', checklist);
-            
+
             descInput.value = '';
-            
+
             // Expand accordion if closed
             const accordionBody = document.getElementById(`check-cat-${cat}-body`);
             if (accordionBody.classList.contains('hidden')) {
@@ -2166,7 +2420,7 @@
         function toggleAccordion(id) {
             const body = document.getElementById(`${id}-body`);
             const arrow = document.getElementById(`${id}-arrow`);
-            
+
             if (body.classList.contains('hidden')) {
                 body.classList.remove('hidden');
                 arrow.classList.remove('fa-chevron-down');
@@ -2188,10 +2442,10 @@
             });
 
             const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
-            
+
             // Update Text
             document.getElementById('checklist-progress-text').innerText = `${percent}%`;
-            
+
             // Update SVG dashoffset
             // r=18 => Circumference = 2 * PI * 18 = 113.1
             const circle = document.getElementById('checklist-progress-circle');
@@ -2204,7 +2458,7 @@
             const container = document.getElementById('photo-checklist-container');
             if (!container) return;
             container.innerHTML = '';
-            
+
             photoChecklist.forEach(item => {
                 const row = document.createElement('div');
                 row.className = "flex items-start gap-2.5 p-2 hover:bg-white/5 rounded-xl transition";
@@ -2230,11 +2484,11 @@
         function toggleFuelStations() {
             showFuelStations = !showFuelStations;
             const btn = document.getElementById('btn-toggle-fuel');
-            
+
             if (showFuelStations) {
                 btn.classList.remove('bg-[#120f0e]', 'text-gray-400');
                 btn.classList.add('bg-orange-600', 'text-white', 'border-orange-500/20');
-                
+
                 fuelStations.forEach(station => {
                     const icon = customIconHTML('fa-solid fa-gas-pump', 'bg-orange-600');
                     const marker = L.marker(station.coords, { icon: icon })
@@ -2253,7 +2507,7 @@
             } else {
                 btn.classList.remove('bg-orange-600', 'text-white', 'border-orange-500/20');
                 btn.classList.add('bg-[#120f0e]', 'text-gray-400');
-                
+
                 fuelMarkers.forEach(marker => mapInstance.removeLayer(marker));
                 fuelMarkers = [];
             }
@@ -2266,11 +2520,11 @@
             }
             showMsmOverlay = !showMsmOverlay;
             const btn = document.getElementById('btn-toggle-msm');
-            
+
             if (showMsmOverlay) {
                 btn.classList.remove('bg-[#120f0e]', 'text-gray-400');
                 btn.classList.add('bg-purple-600', 'text-white', 'border-purple-500/20');
-                
+
                 if (!msmOverlayPolyline) {
                     msmOverlayPolyline = L.polyline(msmGpxPoints.map(p => [p.lat, p.lon]), {
                         color: '#d946ef', // Bright magenta
@@ -2284,7 +2538,7 @@
             } else {
                 btn.classList.remove('bg-purple-600', 'text-white', 'border-purple-500/20');
                 btn.classList.add('bg-[#120f0e]', 'text-gray-400');
-                
+
                 if (msmOverlayPolyline) {
                     mapInstance.removeLayer(msmOverlayPolyline);
                 }
@@ -2292,4 +2546,5 @@
         }
     </script>
 </body>
+
 </html>
