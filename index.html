@@ -117,6 +117,42 @@
             border: 1px solid rgba(217, 119, 54, 0.3);
             box-shadow: 0 10px 30px -10px rgba(217, 119, 54, 0.15);
         }
+        /* Pulsing Marker Animation */
+        @keyframes map-pulse-animation {
+            0% {
+                transform: scale(0.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3.5);
+                opacity: 0;
+            }
+        }
+        .map-pulse-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom-map-pulse-marker {
+            width: 16px;
+            height: 16px;
+            background-color: #d97736;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 10px rgba(217, 119, 54, 0.9);
+        }
+        .custom-map-pulse-marker::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 3px solid #d97736;
+            border-radius: 50%;
+            animation: map-pulse-animation 0.8s ease-out 4; /* exactly 4 pulses */
+            opacity: 0;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-tuscany-500 selection:text-white pb-6">
@@ -1093,19 +1129,29 @@
         }
 
         function focusOnPoint(coords, zoom = 14) {
+            // Center the map on coordinates
             mapInstance.setView(coords, zoom);
             
+            // Scroll page smoothly to the map container
+            const mapEl = document.getElementById('map');
+            if (mapEl) {
+                mapEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            
             // Highlight step briefly by placing a temporary pulsing marker
-            const tempHighlight = L.circleMarker(coords, {
-                color: '#d97736',
-                fillColor: '#d97736',
-                fillOpacity: 0.6,
-                radius: 12
-            }).addTo(mapInstance);
+            const pulseIcon = L.divIcon({
+                html: '<div class="custom-map-pulse-marker"></div>',
+                className: 'map-pulse-container',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+            
+            const tempHighlight = L.marker(coords, { icon: pulseIcon }).addTo(mapInstance);
 
+            // Remove marker after 4 pulses (0.8s * 4 = 3200ms)
             setTimeout(() => {
                 mapInstance.removeLayer(tempHighlight);
-            }, 1800);
+            }, 3200);
         }
 
         // --- GPX & ROUTE CALCULATIONS ---
