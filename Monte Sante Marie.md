@@ -34,7 +34,7 @@ La sua fama è tale da essere diventata un simbolo di eventi come **L'Eroica** e
 | Informazione | Dettaglio |
 |--------------|-----------|
 | **Località** | Asciano (cimitero) |
-| **Coordinate GPS** | `43.2348, 11.5595` (approssimative per Asciano) |
+| **Coordinate GPS** | `43.2404, 11.5531` |
 | **Riferimento** | Cimitero di Asciano, appena fuori il paese |
 | **Descrizione** | Lo sterrato inizia subito dopo l'abitato di Asciano, in direzione di Monte Sante Marie. |
 
@@ -45,7 +45,7 @@ La sua fama è tale da essere diventata un simbolo di eventi come **L'Eroica** e
 | Informazione | Dettaglio |
 |--------------|-----------|
 | **Località** | Torre a Castello |
-| **Coordinate GPS** | `43.1833, 11.6000` (approssimative) |
+| **Coordinate GPS** | `43.3102, 11.5280` |
 | **Descrizione** | Il tratto sterrato termina qui, dove si ritorna su asfalto. |
 
 ---
