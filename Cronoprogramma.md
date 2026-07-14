@@ -1,6 +1,6 @@
 # 🏍️ Percorso Eroica in Moto – Cronoprogramma Weekend (2 Giorni)
 
-Pianificazione dettagliata per un weekend alla scoperta del percorso dell'Eroica in moto con i POI selezionati.
+Pianificazione dettagliata per un weekend alla scoperta del percorso dell'Eroica in moto, con tutte le tappe più iconiche.
 
 ---
 
@@ -28,7 +28,8 @@ Pianificazione dettagliata per un weekend alla scoperta del percorso dell'Eroica
 | **08:45** | **Partenza verso Gaiole** | - | Guida in direzione Chianti | 1h 15min |
 | **10:00** | **Gaiole in Chianti** | `43.466970, 11.433860` | Il cuore pulsante dell'Eroica. Sosta per foto davanti alla scultura del **Gallo Nero**. Visita al borgo. | 45 min |
 | **10:45** | **Castello di Brolio** | `43.413448, 11.463600` | Castello del XII secolo (famiglia Ricasoli). Salita sterrata tra cipressi e vista panoramica mozzafiato. | 1h |
-| **11:45** | **Guida verso Radi** | - | Strade bianche e colline toscane | 1h |
+| **11:45** | **Pianella** | `43.3538, 11.4155`[reference:0] | Piccola frazione nel territorio di Castelnuovo Berardenga[reference:1]. Breve sosta panoramica. | 15 min |
+| **12:00** | **Guida verso Radi** | - | Strade bianche e colline toscane | 45 min |
 
 ### 🕛 Pranzo (12:45 – 14:00)
 
@@ -40,8 +41,11 @@ Pianificazione dettagliata per un weekend alla scoperta del percorso dell'Eroica
 
 | Orario | Tappa | Coordinate GPS | Attività | Durata |
 |--------|-------|----------------|----------|--------|
-| **14:00** | **Partenza da Radi** | - | Direzione Montalcino | 1h 30min |
-| **15:30** | **Montalcino** (Pernotto) | `43.055043, 11.489142` | Famoso per il Brunello. Strade bianche con pendenze >15% ed enogastronomia toscana di altissimo livello. | Arrivo e sistemazione |
+| **14:00** | **Murlo** (territorio comunale) | `43.1607, 11.3880`[reference:2] | Affascinante comune con bellissime strade bianche e paesaggi delle Crete[reference:3]. Sosta fotografica. | 20 min |
+| **14:20** | **Bibbiano** | `43.1100, 11.4800` (approssimative) | Località tra Murlo e Montalcino[reference:4]. Zona collinare suggestiva con vista sulla valle dell'Ombrone[reference:5]. | 15 min |
+| **14:35** | **Lucignano d'Asso** | `43.1237, 11.5917`[reference:6] | Piccolo borgo medievale[reference:7]. Sosta per foto e panorami. | 20 min |
+| **14:55** | **Torrenieri** | `43.0875, 11.5482`[reference:8] | Frazione di Montalcino[reference:9], famosa per i vigneti di Brunello[reference:10]. Sosta tra i filari. | 15 min |
+| **15:10** | **Montalcino** (Pernotto) | `43.055043, 11.489142` | Famoso per il Brunello. Strade bianche con pendenze >15% ed enogastronomia toscana di altissimo livello. | Arrivo e sistemazione |
 
 ### 🕖 Sera (18:00 – 22:00)
 
@@ -70,7 +74,8 @@ Pianificazione dettagliata per un weekend alla scoperta del percorso dell'Eroica
 |--------|-------|----------------|----------|--------|
 | **09:00** | **Partenza da Montalcino** | `43.055043, 11.489142` | Check-out e partenza | 15 min |
 | **09:15** | **Buonconvento** | `43.137508, 11.481829` | ⚠️ **Splendido borgo medievale. Deviazione obbligatoria per evitare sensi unici.** Segui il GPX aggiornato! Visita al centro storico. | 1h |
-| **10:15** | **Guida verso Monte Sante Marie** | - | Attraversamento delle Crete Senesi | 1h |
+| **10:15** | **San Giovanni d'Asso** | `43.1500, 11.5833`[reference:11] | Borgo medievale[reference:12] nel cuore delle Crete Senesi[reference:13]. Visita al Castello e alla famosa sagra del tartufo bianco. | 30 min |
+| **10:45** | **Asciano** | `43.2348, 11.5595`[reference:14] | Cittadina nel cuore delle Crete Senesi[reference:15]. Sosta nel centro storico. | 30 min |
 | **11:15** | **Monte Sante Marie** | `43.2341, 11.5739` | 🏆 **Il tratto sterrato più famoso, duro ed entusiasmante delle Crete Senesi.** Sosta per foto e adrenalina. | 45 min |
 | **12:00** | **Guida verso Radda in Chianti** | - | Panorami mozzafiato | 1h |
 
@@ -84,15 +89,16 @@ Pianificazione dettagliata per un weekend alla scoperta del percorso dell'Eroica
 
 | Orario | Tappa | Coordinate GPS | Attività | Durata |
 |--------|-------|----------------|----------|--------|
-| **14:30** | **Badia a Coltibuono** | `43.494765, 11.449528` | Antica abbazia benedettina millenaria. Oggi cantina vinicola e ristorante di livello. Visita e degustazione. | 1h 30min |
-| **16:00** | **Rientro a Gaiole in Chianti** | - | Ultimi chilometri | 30 min |
-| **16:30** | **Gaiole in Chianti** | `43.466970, 11.433860` | Arrivo al punto di partenza. Ultimo saluto e foto di gruppo. | 30 min |
+| **14:30** | **Castelnuovo Berardenga** | `43.3455, 11.5019`[reference:16] | Comune medievale[reference:17] tra Asciano e Gaiole. Breve sosta panoramica. | 20 min |
+| **14:50** | **Badia a Coltibuono** | `43.494765, 11.449528` | Antica abbazia benedettina millenaria. Oggi cantina vinicola e ristorante di livello. Visita e degustazione. | 1h 30min |
+| **16:20** | **Rientro a Gaiole in Chianti** | - | Ultimi chilometri | 30 min |
+| **16:50** | **Gaiole in Chianti** | `43.466970, 11.433860` | Arrivo al punto di partenza. Ultimo saluto e foto di gruppo. | 30 min |
 
-### 🕔 Fine Corso (17:00)
+### 🕔 Fine Corso (17:20)
 
 | Orario | Attività | Note |
 |--------|----------|------|
-| **17:00** | **Saluti e partenza per il rientro** | Arrivederci alla prossima Eroica! |
+| **17:20** | **Saluti e partenza per il rientro** | Arrivederci alla prossima Eroica! |
 
 ---
 

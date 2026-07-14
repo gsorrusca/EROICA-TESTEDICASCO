@@ -1,22 +1,5 @@
 # 🏍️ Percorso Eroica in Moto – Guida Completa
 
-Benvenuto nella guida definitiva per affrontare il percorso dell'Eroica in moto.  
-Qui troverai tutto ciò che serve: traccia GPX, punti di interesse con coordinate, consigli per mangiare, soste panoramiche e avvertenze fondamentali.
-
----
-
-## 📍 Traccia GPX
-
-Il file GPX aggiornato e testato per motociclisti è disponibile al seguente link:
-
-👉 **[Scarica il GPX "Eroici in Moto"](https://drive.google.com/file/d/1BuziJGDF-KpQQW6MnwuvYuW_Atgc26L9/view?usp=sharing)**
-
-> ⚠️ **Attenzione:** questo tracciato include la **deviazione obbligatoria a Buonconvento** per evitare sensi unici e strade chiuse. Usa esclusivamente questo file per non incorrere in problemi.
-
-In alternativa, puoi trovare la traccia "Eroica Moto Completa" su [Wikiloc](https://www.wikiloc.com) (potrebbe richiedere account premium per il download).
-
----
-
 ## 🗺️ Panoramica del Percorso
 
 | Dettaglio | Informazione |
@@ -66,18 +49,10 @@ In alternativa, puoi trovare la traccia "Eroica Moto Completa" su [Wikiloc](http
 
 | Nome | Coordinate GPS | Descrizione |
 |------|----------------|-------------|
-| **Terme di Rapolano** | `43.29498, 11.60264` (alt. `43.28333, 11.60000`) | Oasi di benessere termale, perfetta per una pausa rigenerante. |
 | **Big Bench #136** | *Da cercare su Komoot come "Big Bench n°136 Gaiole in Chianti"* | Panchina gigante panoramica con vista sul Castello di Meleto e vigneti. |
 
 ---
 
-## 💎 Itinerari Alternativi
-
-| Variante | Partenza | Lunghezza | Coordinate di partenza |
-|----------|----------|-----------|------------------------|
-| **Eroica da sud** | Montalcino | ~90 km | `43.055043, 11.489142` |
-
-Se preferisci un percorso più breve, puoi iniziare da Montalcino e arrivare comunque a Gaiole in Chianti.
 
 ---
 
@@ -89,14 +64,12 @@ Se preferisci un percorso più breve, puoi iniziare da Montalcino e arrivare com
 - **Abbigliamento:** consigliato abbigliamento da moto con protezioni, ma anche comodo per le soste.
 - **Tempistiche:** con soste per foto e pranzo, calcola almeno 6-7 ore totali.
 
----
+## 📸 Foto Imperdibili
 
-## 📲 Come Usare Questo File
-
-- Copia le coordinate GPS nel tuo navigatore o app di mappe (Google Maps, OsmAnd, etc.).
-- Carica il file GPX sul tuo dispositivo GPS o sullo smartphone con app come **Komoot**, **Wikiloc** o **Garmin Connect**.
-- Segui il tracciato e goditi ogni curva di questa strada leggendaria.
-
----
-
-**Buon viaggio e lunghe curve!** 🏍️🍷🇮🇹
+1. **Castello di Brolio** – la strada bianca tra i cipressi
+2. **Montalcino** – panorama sulla valle
+3. **San Quirico d'Orcia** – i cipressi di Leonardi (sulla via Cassia)
+4. **Pienza** – il panorama dalla terrazza del duomo
+5. **Bagno Vignoni** – la vasca termale in piazza
+6. **Radda in Chianti** – la piazza medievale
+7. **Big Bench #136** – panchina gigante con vista
