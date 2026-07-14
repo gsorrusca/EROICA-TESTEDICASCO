@@ -1128,14 +1128,42 @@
             });
         }
 
+        function smoothScrollTo(element, duration = 1200) {
+            const targetPosition = element.getBoundingClientRect().top + window.scrollY;
+            const startPosition = window.scrollY;
+            const distance = targetPosition - startPosition;
+            let startTime = null;
+
+            function easeInOutCubic(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t * t + b;
+                t -= 2;
+                return c / 2 * (t * t * t + 2) + b;
+            }
+
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                const run = easeInOutCubic(timeElapsed, startPosition, distance, duration);
+                window.scrollTo(0, run);
+                if (timeElapsed < duration) {
+                    requestAnimationFrame(animation);
+                } else {
+                    window.scrollTo(0, targetPosition);
+                }
+            }
+
+            requestAnimationFrame(animation);
+        }
+
         function focusOnPoint(coords, zoom = 14) {
             // Center the map on coordinates
             mapInstance.setView(coords, zoom);
             
-            // Scroll page smoothly to the map container
+            // Scroll page smoothly to the map container with custom duration
             const mapEl = document.getElementById('map');
             if (mapEl) {
-                mapEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                smoothScrollTo(mapEl, 1200);
             }
             
             // Highlight step briefly by placing a temporary pulsing marker
